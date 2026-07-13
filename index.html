@@ -863,48 +863,55 @@ const bonusVocabPool = [
             return adjustedVerb;
         }
 
-        // FIXED: Each sentence now repeats exactly TWICE (levels cycle through 2x each sentence)
-        function generateLevelContent(lvl) {
-            // Dynamically splits 100 levels across available modules (approx 20 levels per module)
-            const moduleIndex = Math.min(Math.floor((lvl - 1) / 20), courseModules.length - 1);
-            const activeModule = courseModules[moduleIndex];
-            
-            // Each sentence repeats exactly 2 times: divide by 2 to get sentence index
-            // Level 1-2: sentence 0, Level 3-4: sentence 1, etc.
-            const sentenceIndex = Math.floor((lvl - 1) / 2) % activeModule.sentences.length;
-            const targetSentenceObj = activeModule.sentences[sentenceIndex];
-            
-            const isMilestone = lvl % 10 === 0;
-            const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
+       function generateLevelContent(lvl) {
+    // 1. Each module now spans exactly 10 levels (since sentences don't repeat)
+    const levelsPerModule = 10;
+    const moduleIndex = Math.min(Math.floor((lvl - 1) / levelsPerModule), courseModules.length - 1);
+    const activeModule = courseModules[moduleIndex];
+    
+    // 2. Calculate the sentence index directly (0 to 9) based on the level's position in the module
+    // Level 1 -> Index 0, Level 10 -> Index 9
+    // Level 11 -> Index 0, Level 20 -> Index 9
+    const sentenceIndex = (lvl - 1) % levelsPerModule;
+    const targetSentenceObj = activeModule.sentences[sentenceIndex];
+    
+    const isMilestone = lvl % 10 === 0;
+    const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
 
-            // Split the exact phrase into clean searchable elements for Step 1
-            const rawWords = targetSentenceObj.de.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").split(/\s+/);
-            const simulatedVocabGrid = rawWords.map(word => {
-                // Find matching definition inside our vocabulary dictionary lists
-                const found = activeModule.vocabList.find(v => v.de.toLowerCase() === word.toLowerCase() || word.toLowerCase().includes(v.de.toLowerCase()));
-                return {
-                    de: word,
-                    en: found ? found.en : "Context Word"
-                };
-            });
+    // 3. Split the exact phrase into clean searchable elements for Step 1
+    const rawWords = targetSentenceObj.de.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").split(/\s+/);
+    
+    const simulatedVocabGrid = rawWords.map(word => {
+        const cleanWord = word.toLowerCase();
+        
+        // Find matching definition inside our vocabulary list
+        const found = activeModule.vocabList.find(v => {
+            const cleanDe = v.de.toLowerCase();
+            return cleanDe === cleanWord || cleanWord === cleanDe;
+        });
+        
+        return {
+            de: word, // Keep original casing for the game UI
+            en: found ? found.en : "Context Word"
+        };
+    });
 
-            return {
-                title: isMilestone
-                    ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — ${activeModule.stageTitle}`
-                    : `Level ${lvl}: ${activeModule.stageTitle}`,
-                desc: `Mastering daily communication structures.`,
-                rule: activeModule.syntaxRule,
-                vocab: simulatedVocabGrid,
-                isMilestone: isMilestone,
-                milestoneTier: milestoneTier,
-                sentence: {
-                    correctArray: targetSentenceObj.de.split(/\s+/),
-                    en: targetSentenceObj.en,
-                    de: targetSentenceObj.de
-                }
-            };
+    return {
+        title: isMilestone
+            ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — ${activeModule.stageTitle}`
+            : `Level ${lvl}: ${activeModule.stageTitle}`,
+        desc: `Mastering daily communication structures.`,
+        rule: activeModule.syntaxRule,
+        vocab: simulatedVocabGrid,
+        isMilestone: isMilestone,
+        milestoneTier: milestoneTier,
+        sentence: {
+            correctArray: targetSentenceObj.de.split(/\s+/),
+            en: targetSentenceObj.en,
+            de: targetSentenceObj.de
         }
-
+    };
+}
         function loadActiveLevel(lvl) {
             currentLevel = lvl;
             generatedLevelData = generateLevelContent(lvl);
