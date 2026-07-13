@@ -17,6 +17,29 @@ const { getStore } = require("@netlify/blobs");
 
 const STORE_NAME = "deutsch100";
 
+// Netlify Blobs is normally auto-configured when getStore() is called inside
+// a Function. Some deploys hit a known Netlify issue where that auto
+// injection silently fails (MissingBlobsEnvironmentError) even though
+// nothing is wrong with the function code. As a reliable fallback, we
+// explicitly pass siteID/token from environment variables if auto-config
+// doesn't work. Set these in Netlify: Project configuration > Environment
+// variables > BLOBS_SITE_ID (= Project ID) and BLOBS_TOKEN (= a Personal
+// Access Token).
+function openStore() {
+  try {
+    return getStore(STORE_NAME);
+  } catch (err) {
+    if (err && err.name === "MissingBlobsEnvironmentError" && process.env.BLOBS_SITE_ID && process.env.BLOBS_TOKEN) {
+      return getStore({
+        name: STORE_NAME,
+        siteID: process.env.BLOBS_SITE_ID,
+        token: process.env.BLOBS_TOKEN
+      });
+    }
+    throw err;
+  }
+}
+
 const DEFAULT_STATE = {
   unlockedLevelMax: 1,
   stats: { lastActiveDate: null, streakCount: 0, levelsToday: 0 },
@@ -70,7 +93,20 @@ exports.handler = async (event) => {
     return { statusCode: 204, headers: CORS_HEADERS, body: "" };
   }
 
-  const store = getStore(STORE_NAME);
+  let store;
+  try {
+    store = openStore();
+  } catch (err) {
+    console.error("Could not open Blobs store:", err);
+    return {
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({
+        error: "Blobs store is not configured. Set BLOBS_SITE_ID and BLOBS_TOKEN environment variables on this site.",
+        detail: err && err.message
+      })
+    };
+  }
 
   if (event.httpMethod === "GET") {
     const username = normalizeUsername(event.queryStringParameters && event.queryStringParameters.username);
