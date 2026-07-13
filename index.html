@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deutsch100 - German Learning Portal</title>
+    <!-- Applied as early as possible (before CSS/paint) so returning users in
+         dark mode never see a flash of the light theme. -->
+    <script>
+        (function () {
+            try {
+                const stored = localStorage.getItem('deutsch100_theme');
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (stored === 'dark' || (!stored && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (err) {
+                // localStorage unavailable (e.g. privacy mode) — default to light theme.
+            }
+        })();
+    </script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for Icons -->
@@ -27,6 +42,55 @@
         .horizontal-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .horizontal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* ============ DARK MODE ============
+           Applied via the .dark class on <html>. The page's markup uses plain
+           Tailwind utility classes (no dark: variants baked in), so dark mode
+           is layered on as CSS overrides targeting those same classes. */
+        html.dark body { background-color: #0b1120; color: #cbd5e1; }
+
+        html.dark .bg-white { background-color: #161f32 !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; }
+        html.dark .bg-slate-100 { background-color: #1e293b !important; }
+        html.dark .bg-slate-900\/40 { background-color: rgba(2, 6, 23, 0.6) !important; }
+
+        html.dark .border-slate-100 { border-color: #1e293b !important; }
+        html.dark .border-slate-200 { border-color: #2b3a55 !important; }
+        html.dark .border-slate-200\/50 { border-color: rgba(43, 58, 85, 0.5) !important; }
+
+        html.dark .text-slate-900 { color: #f1f5f9 !important; }
+        html.dark .text-slate-800 { color: #e2e8f0 !important; }
+        html.dark .text-slate-700 { color: #cbd5e1 !important; }
+        html.dark .text-slate-600 { color: #94a3b8 !important; }
+        html.dark .text-slate-400 { color: #64748b !important; }
+        html.dark .text-slate-300 { color: #475569 !important; }
+
+        html.dark .bg-amber-50, html.dark .bg-amber-50\/60 { background-color: rgba(120, 53, 15, 0.35) !important; }
+        html.dark .bg-indigo-50, html.dark .bg-indigo-50\/40 { background-color: rgba(49, 46, 129, 0.35) !important; }
+        html.dark .bg-emerald-50, html.dark .bg-emerald-50\/50 { background-color: rgba(6, 78, 59, 0.35) !important; }
+        html.dark .bg-rose-50, html.dark .bg-rose-50\/50 { background-color: rgba(136, 19, 55, 0.35) !important; }
+        html.dark .bg-violet-50 { background-color: rgba(76, 29, 149, 0.35) !important; }
+
+        html.dark .shadow-sm, html.dark .shadow-md, html.dark .shadow-lg,
+        html.dark .shadow-xl, html.dark .shadow-2xl { --tw-shadow-color: rgba(0,0,0,0.4); }
+
+        html.dark .text-amber-700, html.dark .text-amber-800 { color: #fbbf24 !important; }
+        html.dark .text-emerald-700, html.dark .text-emerald-800, html.dark .text-emerald-900 { color: #34d399 !important; }
+        html.dark .text-rose-800, html.dark .text-rose-900 { color: #fb7185 !important; }
+
+        html.dark input, html.dark select {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+            border-color: #334155 !important;
+        }
+        html.dark input::placeholder { color: #64748b; }
+
+        html.dark .horizontal-scroll::-webkit-scrollbar-track { background: #1e293b; }
+        html.dark .horizontal-scroll::-webkit-scrollbar-thumb { background: #475569; }
+        html.dark .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        #dark-toggle-icon { transition: transform 0.3s ease; }
+        #darkModeToggle:active #dark-toggle-icon { transform: rotate(20deg); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -62,6 +126,10 @@
             </div>
             
             <div class="flex items-center space-x-3">
+                <button id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle dark mode" aria-label="Toggle dark mode" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 transition-all">
+                    <i id="dark-toggle-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+
                 <div class="flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm">
                     <i class="fa-solid fa-circle-user text-indigo-500 text-sm"></i>
                     <span>Learner: <span id="learner-name-display" class="text-indigo-600 font-bold">-</span></span>
@@ -529,7 +597,28 @@ const bonusVocabPool = [
             initializeAudioRecognition();
             initializeVoiceSelector();
             checkAutoLogin();
+            syncDarkToggleIcon();
         });
+
+        // Flips the .dark class on <html>, persists the choice, and updates the
+        // moon/sun icon. The initial theme (before this ever runs) is set by the
+        // inline script in <head> so there's no flash of the wrong theme on load.
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            try {
+                localStorage.setItem('deutsch100_theme', isDark ? 'dark' : 'light');
+            } catch (err) {
+                console.error('Failed to persist theme preference:', err);
+            }
+            syncDarkToggleIcon();
+        }
+
+        function syncDarkToggleIcon() {
+            const icon = document.getElementById('dark-toggle-icon');
+            if (!icon) return;
+            const isDark = document.documentElement.classList.contains('dark');
+            icon.className = isDark ? "fa-solid fa-sun text-sm" : "fa-solid fa-moon text-sm";
+        }
 
         function toggleInputMethod() {
             usingVoiceInput = !usingVoiceInput;
