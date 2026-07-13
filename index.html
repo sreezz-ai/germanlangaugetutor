@@ -43,7 +43,7 @@
             <p class="text-xs text-slate-500 mb-6">Enter a username to start or resume your progress — from any device or browser.</p>
 
             <div class="space-y-3">
-                <input id="username-input" type="text" autocomplete="off" placeholder="Choose or enter your username..." maxlength="20" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-center" onkeydown="if(event.key==='Enter') handleLogin()">
+                <input id="username-input" type="text" autocomplete="off" placeholder="Choose or enter your username..." maxlength="20" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <p id="login-error" class="text-xs text-red-500 font-medium hidden"></p>
                 <button onclick="handleLogin()" class="w-full py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">Continue</button>
                 <p class="text-[11px] text-slate-400">3-20 characters: letters, numbers, "_" or "-". New username creates a new profile; an existing one resumes right where you left off.</p>
@@ -84,7 +84,7 @@
 
                 <div class="hidden sm:flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-600">
                     <i class="fa-solid fa-gauge-high text-indigo-500"></i>
-                    <input id="speedSlider" type="range" min="0.5" max="1.2" step="0.1" value="1.0" onchange="updatePlaybackRate(this.value)" class="w-16 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                    <input id="speedSlider" type="range" min="0.5" max="1.2" step="0.1" value="1.0" onchange="updatePlaybackRate(this.value)" class="w-16 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                     <span id="speedValue" class="font-bold text-slate-800">1.0x</span>
                 </div>
             </div>
@@ -96,7 +96,7 @@
         
         <div id="hero-panel" class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between relative overflow-hidden transition-all">
             <div class="z-10">
-                <span id="header-badge" class="bg-indigo-500/30 text-indigo-300 border border-indigo-400/20 font-bold px-3 py-0.5 rounded-full text-xs uppercase tracking-widest inline-block mb-2">Stage 1</span>
+                <span id="header-badge" class="bg-indigo-500/30 text-indigo-300 border border-indigo-400/20 font-bold px-3 py-0.5 rounded-full text-xs uppercase tracking-widest inline-block mb-2">Stage: 1</span>
                 <h1 id="header-title" class="text-2xl font-extrabold tracking-tight mb-1">Level 1: Present Core Basics</h1>
                 <p id="header-desc" class="text-slate-300 text-xs md:text-sm max-w-xl"></p>
             </div>
@@ -124,7 +124,7 @@
                     </div>
                     <p id="syntax-rule-text" class="text-[11px] text-amber-800 bg-amber-50/60 border border-amber-100 p-2 rounded-xl mb-3 font-medium"></p>
 
-                    <input id="game-typing-input" type="text" placeholder="Type the German sentence here..." onkeydown="if(event.key === 'Enter'){ verifySentenceGame(); }" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all mb-3">
+                    <input id="game-typing-input" type="text" placeholder="Type the German sentence here..." onkeydown="if(event.key === 'Enter'){ verifySentenceGame(); }" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div class="flex items-center justify-between text-[11px] font-semibold border-t border-slate-100 pt-3">
@@ -148,7 +148,7 @@
                     <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-microphone text-xs"></i></div>
                     <h3 class="font-bold text-sm text-slate-900">Step 3: Level Gateway Exam (Speaking Test) <span class="text-emerald-600 text-[10px] font-medium">(Easier mode enabled: 50% match required)</span></h3>
                 </div>
-                <button onclick="toggleInputMethod()" id="switchInputBtn" class="text-[10px] text-indigo-600 font-semibold bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md hover:bg-indigo-100">
+                <button onclick="toggleInputMethod()" id="switchInputBtn" class="text-[10px] text-indigo-600 font-semibold bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md hover:bg-indigo-100 transition-all">
                     Switch to Typing Mode
                 </button>
             </div>
@@ -156,14 +156,14 @@
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center max-w-xl mx-auto">
                 <div class="flex items-center justify-center space-x-2 mb-1">
                     <h4 id="target-speaking-de" class="text-base md:text-lg font-bold text-slate-900"></h4>
-                    <button onclick="playTargetSpeakingAudio()" class="w-7 h-7 rounded-md bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-50 flex items-center justify-center shadow-sm"><i class="fa-solid fa-volume-high text-[11px]"></i></button>
+                    <button onclick="playTargetSpeakingAudio()" class="w-7 h-7 rounded-md bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-50 flex items-center justify-center shadow-sm"><i class="fa-solid fa-volume-high text-xs"></i></button>
                 </div>
                 <p id="target-speaking-en" class="text-[11px] text-slate-400 italic mb-3"></p>
 
                 <!-- Audio Record View Interface Component -->
                 <div id="voice-input-wrapper" class="space-y-2">
                     <div class="flex items-center justify-center space-x-4">
-                        <button id="micBtn" onclick="toggleMicInput()" class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-md hover:bg-indigo-700 transition-all focus:outline-none">
+                        <button id="micBtn" onclick="toggleMicInput()" class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-md hover:bg-indigo-700 transition-all">
                             <i id="micIcon" class="fa-solid fa-microphone"></i>
                         </button>
                         <p id="micStatus" class="text-xs font-semibold text-slate-400">Click the mic to speak...</p>
@@ -172,7 +172,7 @@
 
                 <!-- Fallback Text Validation Component Panel -->
                 <div id="text-input-wrapper" class="hidden max-w-sm mx-auto space-y-2">
-                    <input id="text-fallback-input" type="text" placeholder="Type the German sentence here exactly..." onkeydown="if(event.key === 'Enter'){ handleTextFallbackSubmit(); }" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-center">
+                    <input id="text-fallback-input" type="text" placeholder="Type the German sentence here exactly..." onkeydown="if(event.key === 'Enter'){ handleTextFallbackSubmit(); }" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <button onclick="handleTextFallbackSubmit()" class="px-4 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-indigo-700 transition-all">Submit Answer</button>
                 </div>
 
@@ -207,7 +207,6 @@
 
     <!-- CORE LOGIC FRAMEWORK ENGINE -->
     <script>
-        // PASTE THIS NEW BLOCK IN ITS PLACE:
 const courseModules = [
     {
         stageTitle: "1. Daily Routine & Survival Basics",
@@ -289,7 +288,7 @@ const courseModules = [
             { de: "Ich brauche einen Arzt, weil ich starke Schmerzen habe.", en: "I need a doctor because I have severe pain." },
             { de: "Rufen Sie einen Krankenwagen, da es einen Unfall gab!", en: "Call an ambulance, since there was an accident!" },
             { de: "Wo ist die nächste Apotheke, die am Wochenende offen ist?", en: "Where is the nearest pharmacy that is open on the weekend?" },
-            { de: "Es ist gefährlich hier, deshalb müssen wir sofort gehen.", en: "It is dangerous here, deshalb müssen wir sofort gehen." },
+            { de: "Es ist gefährlich hier, deshalb müssen wir sofort gehen.", en: "It is dangerous here, that's why we must go immediately." },
             { de: "Gibt es ein Krankenhaus in der Nähe, das Englisch spricht?", en: "Is there a hospital nearby that speaks English?" }
         ],
         vocabList: [
@@ -300,7 +299,9 @@ const courseModules = [
             { de: "gefährlich", en: "dangerous" }
         ]
     }
-];        // Bonus phrases unlocked one-by-one as milestone badges (levels 10, 20, ... 100) are earned.
+];
+
+        // Bonus phrases unlocked one-by-one as milestone badges (levels 10, 20, ... 100) are earned.
         const bonusVocabPool = [
             { de: "Prost!", en: "Cheers!" },
             { de: "Alles klar", en: "All good / understood" },
@@ -673,46 +674,48 @@ const courseModules = [
             return adjustedVerb;
         }
 
-        // PASTE THIS NEW FUNCTION IN ITS PLACE:
-function generateLevelContent(lvl) {
-    // Dynamically splits 100 levels across available modules (approx 20 levels per module)
-    const moduleIndex = Math.min(Math.floor((lvl - 1) / 20), courseModules.length - 1);
-    const activeModule = courseModules[moduleIndex];
-    
-    // Smoothly cycles through the sentences inside that active module
-    const sentenceIndex = (lvl - 1) % activeModule.sentences.length;
-    const targetSentenceObj = activeModule.sentences[sentenceIndex];
-    
-    const isMilestone = lvl % 10 === 0;
-    const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
+        // FIXED: Each sentence now repeats exactly TWICE (levels cycle through 2x each sentence)
+        function generateLevelContent(lvl) {
+            // Dynamically splits 100 levels across available modules (approx 20 levels per module)
+            const moduleIndex = Math.min(Math.floor((lvl - 1) / 20), courseModules.length - 1);
+            const activeModule = courseModules[moduleIndex];
+            
+            // Each sentence repeats exactly 2 times: divide by 2 to get sentence index
+            // Level 1-2: sentence 0, Level 3-4: sentence 1, etc.
+            const sentenceIndex = Math.floor((lvl - 1) / 2) % activeModule.sentences.length;
+            const targetSentenceObj = activeModule.sentences[sentenceIndex];
+            
+            const isMilestone = lvl % 10 === 0;
+            const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
 
-    // Split the exact phrase into clean searchable elements for Step 1
-    const rawWords = targetSentenceObj.de.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").split(/\s+/);
-    const simulatedVocabGrid = rawWords.map(word => {
-        // Find matching definition inside our vocabulary dictionary lists
-        const found = activeModule.vocabList.find(v => v.de.toLowerCase() === word.toLowerCase() || word.toLowerCase().includes(v.de.toLowerCase()));
-        return {
-            de: word,
-            en: found ? found.en : "Context Word"
-        };
-    });
+            // Split the exact phrase into clean searchable elements for Step 1
+            const rawWords = targetSentenceObj.de.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").split(/\s+/);
+            const simulatedVocabGrid = rawWords.map(word => {
+                // Find matching definition inside our vocabulary dictionary lists
+                const found = activeModule.vocabList.find(v => v.de.toLowerCase() === word.toLowerCase() || word.toLowerCase().includes(v.de.toLowerCase()));
+                return {
+                    de: word,
+                    en: found ? found.en : "Context Word"
+                };
+            });
 
-    return {
-        title: isMilestone
-            ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — ${activeModule.stageTitle}`
-            : `Level ${lvl}: ${activeModule.stageTitle}`,
-        desc: `Mastering daily communication structures.`,
-        rule: activeModule.syntaxRule,
-        vocab: simulatedVocabGrid,
-        isMilestone: isMilestone,
-        milestoneTier: milestoneTier,
-        sentence: {
-            correctArray: targetSentenceObj.de.split(/\s+/),
-            en: targetSentenceObj.en,
-            de: targetSentenceObj.de
+            return {
+                title: isMilestone
+                    ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — ${activeModule.stageTitle}`
+                    : `Level ${lvl}: ${activeModule.stageTitle}`,
+                desc: `Mastering daily communication structures.`,
+                rule: activeModule.syntaxRule,
+                vocab: simulatedVocabGrid,
+                isMilestone: isMilestone,
+                milestoneTier: milestoneTier,
+                sentence: {
+                    correctArray: targetSentenceObj.de.split(/\s+/),
+                    en: targetSentenceObj.en,
+                    de: targetSentenceObj.de
+                }
+            };
         }
-    };
-}
+
         function loadActiveLevel(lvl) {
             currentLevel = lvl;
             generatedLevelData = generateLevelContent(lvl);
@@ -731,7 +734,7 @@ function generateLevelContent(lvl) {
                 const card = document.createElement('div');
                 card.className = "p-2 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between hover:bg-indigo-50/40 transition-all cursor-pointer text-xs";
                 card.onclick = () => playGermanAudio(item.de);
-                card.innerHTML = `<div><p class="font-bold text-slate-900">${item.de}</p><p class="text-[10px] text-slate-400">${item.en}</p></div><button class="w-5 h-5 rounded bg-white border text-slate-500 flex items-center justify-center text-[9px]"><i class="fa-solid fa-volume-high"></i></button>`;
+                card.innerHTML = `<div><p class="font-bold text-slate-900">${item.de}</p><p class="text-[10px] text-slate-400">${item.en}</p></div><button class="w-5 h-5 rounded bg-white border text-slate-300 flex items-center justify-center text-[9px]"><i class="fa-solid fa-volume-high"></i></button>`;
                 vocabGrid.appendChild(card);
             });
 
@@ -753,7 +756,7 @@ function generateLevelContent(lvl) {
 
             if (levelData.isMilestone) {
                 const tierIcon = levelData.milestoneTier >= 3 ? "fa-trophy" : (levelData.milestoneTier >= 2 ? "fa-crown" : "fa-star");
-                heroPanel.className = "bg-gradient-to-br from-rose-950 via-red-900 to-rose-950 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between relative overflow-hidden ring-2 ring-amber-400/50 transition-all";
+                heroPanel.className = "bg-gradient-to-br from-rose-950 via-red-900 to-rose-950 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between relative overflow-hidden ring-2 ring-rose-400/20 transition-all";
                 badge.className = "bg-amber-400/20 text-amber-300 border border-amber-300/30 font-bold px-3 py-0.5 rounded-full text-xs uppercase tracking-widest inline-block mb-2";
                 badge.innerHTML = `<i class="fa-solid ${tierIcon} mr-1"></i> ✨ Special Boss Milestone Level`;
                 title.innerHTML = `<i class="fa-solid fa-star text-amber-300 mr-1.5"></i>${levelData.title}`;
@@ -968,11 +971,11 @@ function generateLevelContent(lvl) {
                 const isLocked = i > unlockedLevelMax;
                 
                 if (isLocked) {
-                    itemCard.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold bg-slate-100 text-slate-300 border border-slate-200/50 cursor-not-allowed select-none transition-all";
+                    itemCard.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold bg-slate-100 text-slate-300 border border-slate-200/50 cursor-not-allowed select-none";
                     itemCard.disabled = true;
                     itemCard.innerHTML = `<span class="block text-[8px] opacity-60">LVL ${i}</span><i class="fa-solid fa-lock mt-1 block opacity-40"></i>`;
                 } else {
-                    itemCard.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-all";
+                    itemCard.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 hover:text-indigo-600 cursor-pointer transition-all";
                     itemCard.onclick = () => loadActiveLevel(i);
                     itemCard.innerHTML = `<span class="block text-[8px] text-slate-400">LVL ${i}</span><i class="fa-solid fa-circle-play mt-1 text-indigo-500 block text-[10px]"></i>`;
                 }
@@ -986,12 +989,12 @@ function generateLevelContent(lvl) {
                 const node = document.getElementById(`timeline-node-${i}`);
                 if (node && !node.disabled) {
                     if (i === currentLevel) {
-                        node.className = "inline-block min-w-[75px] p-2 rounded-xl text-center text-[10px] font-black bg-indigo-600 text-white border border-indigo-600 shadow-md shadow-indigo-100 transition-all scale-105";
+                        node.className = "inline-block min-w-[75px] p-2 rounded-xl text-center text-[10px] font-black bg-indigo-600 text-white border border-indigo-600 shadow-md shadow-indigo-100 transition-all";
                         node.querySelector('span').className = "block text-[8px] text-indigo-200";
                         node.querySelector('i').className = "fa-solid fa-fire animate-bounce mt-1 block text-amber-300 text-[10px]";
                         node.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                     } else {
-                        node.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-all";
+                        node.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 hover:text-indigo-600 cursor-pointer transition-all";
                         node.querySelector('span').className = "block text-[8px] text-slate-400";
                         node.querySelector('i').className = "fa-solid fa-circle-play mt-1 text-indigo-500 block text-[10px]";
                     }
