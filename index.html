@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsch100 - German Learning Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+        .mic-active {
+            animation: pulse-red 1.5s infinite;
+            background-color: #ef4444 !important;
+        }
+        .horizontal-scroll::-webkit-scrollbar { height: 8px; }
+        .horizontal-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <div id="milestone-announcer" class="sr-only" role="status" aria-live="polite"></div>
+
+    <!-- USERNAME LOGIN / RESUME SCREEN -->
+    <div id="login-screen" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center">
+            <div class="w-16 h-16 bg-indigo-600 text-white mx-auto rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-indigo-100 mb-4">
+                <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">Welcome to Deutsch100</h2>
+            <p class="text-xs text-slate-500 mb-6">Enter a username to start or resume your progress — from any device or browser.</p>
+
+            <div class="space-y-3">
+                <input id="username-input" type="text" autocomplete="off" placeholder="Choose or enter your username..." maxlength="20" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-center" onkeydown="if(event.key==='Enter') handleLogin()">
+                <p id="login-error" class="text-xs text-red-500 font-medium hidden"></p>
+                <button onclick="handleLogin()" class="w-full py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">Continue</button>
+                <p class="text-[11px] text-slate-400">3-20 characters: letters, numbers, "_" or "-". New username creates a new profile; an existing one resumes right where you left off.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PLATFORM INTERFACE NAVBAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md">
+                    <i class="fa-solid fa-flag text-base"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Deutsch100</span>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm">
+                    <i class="fa-solid fa-circle-user text-indigo-500 text-sm"></i>
+                    <span>Learner: <span id="learner-name-display" class="text-indigo-600 font-bold">-</span></span>
+                    <button onclick="switchUser()" title="Switch user" class="text-slate-400 hover:text-indigo-600 transition-colors">
+                        <i class="fa-solid fa-right-left text-[10px]"></i>
+                    </button>
+                </div>
+
+                <div class="hidden sm:flex items-center space-x-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100 text-xs font-semibold text-amber-700 shadow-sm">
+                    <i class="fa-solid fa-fire text-amber-500"></i>
+                    <span id="daily-stats-text">0-day streak · 0 today</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-600">
+                    <i class="fa-solid fa-comment-dots text-indigo-500"></i>
+                    <select id="voiceSelect" onchange="saveSelectedVoice()" class="bg-transparent font-semibold text-slate-800 outline-none max-w-[140px] cursor-pointer">
+                        <option value="">Loading voices...</option>
+                    </select>
+                </div>
+
+                <div class="hidden sm:flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-600">
+                    <i class="fa-solid fa-gauge-high text-indigo-500"></i>
+                    <input id="speedSlider" type="range" min="0.5" max="1.2" step="0.1" value="1.0" onchange="updatePlaybackRate(this.value)" class="w-16 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                    <span id="speedValue" class="font-bold text-slate-800">1.0x</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN INTERFACE LAYOUT -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6 mb-32">
+        
+        <div id="hero-panel" class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between relative overflow-hidden transition-all">
+            <div class="z-10">
+                <span id="header-badge" class="bg-indigo-500/30 text-indigo-300 border border-indigo-400/20 font-bold px-3 py-0.5 rounded-full text-xs uppercase tracking-widest inline-block mb-2">Stage 1</span>
+                <h1 id="header-title" class="text-2xl font-extrabold tracking-tight mb-1">Level 1: Present Core Basics</h1>
+                <p id="header-desc" class="text-slate-300 text-xs md:text-sm max-w-xl"></p>
+            </div>
+            <div class="text-right z-10">
+                <p class="text-xs text-indigo-300 font-semibold uppercase">Profile Progress</p>
+                <p class="text-3xl font-black text-white" id="completion-percentage">1%</p>
+            </div>
+        </div>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
+                <div class="flex items-center space-x-2.5 mb-3">
+                    <div class="p-1.5 bg-amber-50 text-amber-600 rounded-lg"><i class="fa-solid fa-book-open text-xs"></i></div>
+                    <h3 class="font-bold text-sm text-slate-900">Step 1: Noun Building Blocks</h3>
+                </div>
+                <p class="text-[11px] text-slate-400 mb-3">Tap words to listen to phonetic pronunciation profiles.</p>
+                <div id="step1-vocab-grid" class="space-y-2 flex-1 overflow-y-auto max-h-[290px] pr-1"></div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm md:col-span-2 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-2.5 mb-2">
+                        <div class="p-1.5 bg-violet-50 text-violet-600 rounded-lg"><i class="fa-solid fa-keyboard text-xs"></i></div>
+                        <h3 class="font-bold text-sm text-slate-900">Step 2: Translation Typing Challenge</h3>
+                    </div>
+                    <p id="syntax-rule-text" class="text-[11px] text-amber-800 bg-amber-50/60 border border-amber-100 p-2 rounded-xl mb-3 font-medium"></p>
+
+                    <input id="game-typing-input" type="text" placeholder="Type the German sentence here..." onkeydown="if(event.key === 'Enter'){ verifySentenceGame(); }" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all mb-3">
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] font-semibold border-t border-slate-100 pt-3">
+                    <span class="text-slate-400">Target Concept Translation: <span id="game-english-translation" class="text-slate-600 italic"></span></span>
+                    <div class="space-x-1">
+                        <button onclick="verifySentenceGame()" class="px-3 py-1 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all">Check Translation</button>
+                    </div>
+                </div>
+
+                <div id="gameResultAlert" class="mt-3 hidden p-2.5 rounded-xl border text-[11px] font-medium flex items-center justify-between">
+                    <span id="gameResultText"></span>
+                    <button id="btn-play-game-audio" class="w-6 h-6 rounded-md bg-white border flex items-center justify-center shadow-sm"><i class="fa-solid fa-volume-high text-[9px]"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPEAKING TEST INTERFACE WITH FALLBACK INPUT MODES -->
+        <section id="step3-speaking-section" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm opacity-40 pointer-events-none transition-all">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2.5">
+                    <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-microphone text-xs"></i></div>
+                    <h3 class="font-bold text-sm text-slate-900">Step 3: Level Gateway Exam (Speaking Test) <span class="text-emerald-600 text-[10px] font-medium">(Easier mode enabled: 50% match required)</span></h3>
+                </div>
+                <button onclick="toggleInputMethod()" id="switchInputBtn" class="text-[10px] text-indigo-600 font-semibold bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md hover:bg-indigo-100">
+                    Switch to Typing Mode
+                </button>
+            </div>
+            
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center max-w-xl mx-auto">
+                <div class="flex items-center justify-center space-x-2 mb-1">
+                    <h4 id="target-speaking-de" class="text-base md:text-lg font-bold text-slate-900"></h4>
+                    <button onclick="playTargetSpeakingAudio()" class="w-7 h-7 rounded-md bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-50 flex items-center justify-center shadow-sm"><i class="fa-solid fa-volume-high text-[11px]"></i></button>
+                </div>
+                <p id="target-speaking-en" class="text-[11px] text-slate-400 italic mb-3"></p>
+
+                <!-- Audio Record View Interface Component -->
+                <div id="voice-input-wrapper" class="space-y-2">
+                    <div class="flex items-center justify-center space-x-4">
+                        <button id="micBtn" onclick="toggleMicInput()" class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-md hover:bg-indigo-700 transition-all focus:outline-none">
+                            <i id="micIcon" class="fa-solid fa-microphone"></i>
+                        </button>
+                        <p id="micStatus" class="text-xs font-semibold text-slate-400">Click the mic to speak...</p>
+                    </div>
+                </div>
+
+                <!-- Fallback Text Validation Component Panel -->
+                <div id="text-input-wrapper" class="hidden max-w-sm mx-auto space-y-2">
+                    <input id="text-fallback-input" type="text" placeholder="Type the German sentence here exactly..." onkeydown="if(event.key === 'Enter'){ handleTextFallbackSubmit(); }" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-center">
+                    <button onclick="handleTextFallbackSubmit()" class="px-4 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-indigo-700 transition-all">Submit Answer</button>
+                </div>
+
+                <div id="speechFeedbackBox" class="mt-3 hidden p-3 rounded-xl border text-left text-[11px] font-medium">
+                    <p id="speechFeedbackTitle" class="font-bold mb-1"></p>
+                    <div id="speechDiffVisualization" class="flex flex-wrap gap-1 p-2 bg-white rounded-lg border border-slate-100 font-bold text-xs my-1.5"></div>
+                    <p id="speechFeedbackTranscript" class="text-[10px] text-slate-400 italic"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MILESTONE BADGE COLLECTION -->
+        <section class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-trophy text-amber-500"></i> Milestone Badge Collection</span>
+                <span class="text-[10px] text-slate-400">Tap an earned badge to hear its bonus phrase</span>
+            </div>
+            <div id="badge-collection-container" class="flex overflow-x-auto space-x-2 pb-1 horizontal-scroll"></div>
+        </section>
+    </main>
+
+    <!-- COURSE ROADMAP TIMELINE CONTAINER -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-2xl z-40">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-road text-indigo-500"></i> Levels 1 - 100 Course Roadmap Timeline</span>
+                <span id="roadmap-summary-badge" class="text-[10px] font-bold bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md border border-indigo-100">Stage Unlocked: 1/100</span>
+            </div>
+            <div id="level-roadmap-container" class="flex overflow-x-auto space-x-2 pb-2 pt-1 horizontal-scroll whitespace-nowrap"></div>
+        </div>
+    </div>
+
+    <!-- CORE LOGIC FRAMEWORK ENGINE -->
+    <script>
+        const vocabPool = {
+            subjects: [{ de: "Ich", en: "I" }, { de: "Du", en: "You" }, { de: "Er", en: "He" }, { de: "Sie", en: "She" }, { de: "Wir", en: "We" }, { de: "Ihr", en: "You all" }],
+            verbs: [{ de: "trinke", en: "drink", inf: "trinken" }, { de: "esse", en: "eat", inf: "essen" }, { de: "lerne", en: "learn", inf: "lernen" }, { de: "sehe", en: "see", inf: "sehen" }, { de: "kaufe", en: "buy", inf: "kaufen" }, { de: "habe", en: "have", inf: "haben" }, { de: "suche", en: "search", inf: "suchen" }, { de: "mache", en: "make", inf: "machen" }],
+            objects: [{ de: "Wasser", en: "water" }, { de: "Brot", en: "bread" }, { de: "Deutsch", en: "German" }, { de: "Kaffee", en: "coffee" }, { de: "Milch", en: "milk" }, { de: "Obst", en: "fruit" }, { de: "Bücher", en: "books" }, { de: "Musik", en: "music" }, { de: "Tee", en: "tea" }],
+            adverbs: [{ de: "gern", en: "gladly" }, { de: "heute", en: "today" }, { de: "immer", en: "always" }, { de: "jetzt", en: "now" }, { de: "oft", en: "often" }, { de: "hier", en: "here" }],
+            adjectives: [{ de: "kalten", en: "cold" }, { de: "warmen", en: "warm" }, { de: "frischen", en: "fresh" }, { de: "süßen", en: "sweet" }, { de: "guten", en: "good" }, { de: "leckeren", en: "tasty" }],
+            rules: ["Rule: Basic Syntax setup. Word placement configurations order structures values: Subject (Position 1) + Conjugated Working Verb (Position 2).", "Rule: Adverb priority formatting. Expressions relating to frequency metrics scale directly adjacent following active verbs.", "Rule: Direct Accusative case layout rules. Objects taking primary transitive impact flow inside parameters directly."]
+        };
+
+        // Bonus phrases unlocked one-by-one as milestone badges (levels 10, 20, ... 100) are earned.
+        const bonusVocabPool = [
+            { de: "Prost!", en: "Cheers!" },
+            { de: "Alles klar", en: "All good / understood" },
+            { de: "Kein Problem", en: "No problem" },
+            { de: "Viel Glück", en: "Good luck" },
+            { de: "Bis später", en: "See you later" },
+            { de: "Herzlichen Glückwunsch", en: "Congratulations" },
+            { de: "Guten Appetit", en: "Enjoy your meal" },
+            { de: "Schönen Tag noch", en: "Have a nice day" },
+            { de: "Gute Besserung", en: "Get well soon" },
+            { de: "Du schaffst das", en: "You've got this" }
+        ];
+
+        // The signed-in learner for this session. Set once the username screen
+        // is completed; every localStorage key and server call is scoped to it.
+        let currentUsername = null;
+        const USERNAME_PATTERN = /^[a-z0-9_-]{3,20}$/;
+        const ACTIVE_USERNAME_KEY = "deutsch100_active_username";
+
+        // Backend endpoint (Netlify Function + Netlify Blobs) that makes progress
+        // sync across devices/browsers, keyed by username. Falls back to this
+        // browser's per-user localStorage cache automatically if the server
+        // can't be reached (e.g. opened as a plain local file, or offline).
+        const PROGRESS_API = "/.netlify/functions/progress";
+        let currentLevel = 1;
+        let unlockedLevelMax = 1;
+        let globalPlaybackRate = 1.0;
+        let recognition = null;
+        let isRecording = false;
+        let generatedLevelData = {};
+        let systemVoices = [];
+        let selectedVoiceName = "";
+        let usingVoiceInput = true;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeAudioRecognition();
+            initializeVoiceSelector();
+            checkAutoLogin();
+        });
+
+        function toggleInputMethod() {
+            usingVoiceInput = !usingVoiceInput;
+            const voiceWrap = document.getElementById('voice-input-wrapper');
+            const textWrap = document.getElementById('text-input-wrapper');
+            const switchBtn = document.getElementById('switchInputBtn');
+
+            if (usingVoiceInput) {
+                voiceWrap.classList.remove('hidden');
+                textWrap.classList.add('hidden');
+                switchBtn.textContent = "Switch to Typing Mode";
+            } else {
+                voiceWrap.classList.add('hidden');
+                textWrap.classList.remove('hidden');
+                switchBtn.textContent = "Switch to Microphone Mode";
+            }
+        }
+
+        function handleTextFallbackSubmit() {
+            const inputVal = document.getElementById('text-fallback-input').value.trim();
+            if (!inputVal) return alert("Please type your response answer before submitting.");
+            processVoiceDiffValidation(inputVal);
+        }
+
+        function initializeVoiceSelector() {
+            if ('speechSynthesis' in window) {
+                const loadVoices = () => {
+                    systemVoices = window.speechSynthesis.getVoices();
+                    const germanVoices = systemVoices.filter(v => v.lang.startsWith('de'));
+                    const dropdown = document.getElementById('voiceSelect');
+                    dropdown.innerHTML = '';
+                    
+                    if (germanVoices.length === 0) {
+                        dropdown.innerHTML = '<option value="">Default DE Voice</option>';
+                        return;
+                    }
+
+                    germanVoices.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        option.textContent = voice.name.replace("Microsoft", "").replace("Google", "").trim();
+                        dropdown.appendChild(option);
+                    });
+
+                    const storedVoice = localStorage.getItem('deutsch100_preferred_voice');
+                    if (storedVoice && germanVoices.some(v => v.name === storedVoice)) {
+                        dropdown.value = storedVoice;
+                        selectedVoiceName = storedVoice;
+                    } else {
+                        selectedVoiceName = germanVoices[0].name;
+                    }
+                };
+
+                loadVoices();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = loadVoices;
+                }
+            }
+        }
+
+        function saveSelectedVoice() {
+            const dropdown = document.getElementById('voiceSelect');
+            selectedVoiceName = dropdown.value;
+            localStorage.setItem('deutsch100_preferred_voice', selectedVoiceName);
+        }
+
+        // Per-user localStorage key helpers. Every cached key is namespaced by
+        // username, so switching users (or opening a different profile in this
+        // same browser) never mixes progress between people.
+        function progressKey() { return `d100_progress_${currentUsername}`; }
+        function statsKey() { return `d100_stats_${currentUsername}`; }
+        function badgesKey() { return `d100_badges_${currentUsername}`; }
+
+        // If this browser already has a remembered username, skip straight to
+        // resuming their progress instead of showing the entry screen again.
+        function checkAutoLogin() {
+            const remembered = localStorage.getItem(ACTIVE_USERNAME_KEY);
+            if (remembered && USERNAME_PATTERN.test(remembered)) {
+                loginUser(remembered);
+            }
+        }
+
+        // Fetches this username's saved state from the server (Netlify Blobs, via
+        // the Netlify Function). Returns null if unreachable so callers can fall
+        // back to this browser's per-user localStorage cache.
+        async function loadStateFromServer(username) {
+            try {
+                const res = await fetch(`${PROGRESS_API}?username=${encodeURIComponent(username)}`, { method: "GET" });
+                if (!res.ok) throw new Error(`Server responded ${res.status}`);
+                return await res.json(); // { exists, username, state }
+            } catch (err) {
+                console.error("Could not reach progress server, using this browser's local data:", err);
+                return null;
+            }
+        }
+
+        // Pushes the current level/streak/badge state to the server under this
+        // username. Best-effort: if it fails (offline, function not deployed yet,
+        // etc.) the local copy is still safe in localStorage and the next
+        // successful sync will catch the server up.
+        async function syncStateToServer() {
+            if (!currentUsername) return;
+            const payload = {
+                username: currentUsername,
+                unlockedLevelMax: unlockedLevelMax,
+                stats: readDailyStats(),
+                badges: readMilestoneBadges()
+            };
+            try {
+                const res = await fetch(PROGRESS_API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error(`Server responded ${res.status}`);
+            } catch (err) {
+                console.error("Could not sync progress to server (will retry on next change):", err);
+            }
+        }
+
+        function showLoginError(message) {
+            const el = document.getElementById('login-error');
+            el.textContent = message;
+            el.classList.remove('hidden');
+        }
+
+        function handleLogin() {
+            const rawInput = document.getElementById('username-input').value.trim().toLowerCase();
+            if (!USERNAME_PATTERN.test(rawInput)) {
+                showLoginError("Username must be 3-20 characters: letters, numbers, \"_\" or \"-\".");
+                return;
+            }
+            document.getElementById('login-error').classList.add('hidden');
+            localStorage.setItem(ACTIVE_USERNAME_KEY, rawInput);
+            loginUser(rawInput);
+        }
+
+        // Creates a brand-new profile (starting at Level 1) if this username has
+        // never been seen before, or resumes exactly where that username left off
+        // if it has — on any device or browser, since the source of truth is the
+        // server. Falls back to this browser's cached copy if the server can't be
+        // reached (e.g. offline).
+        async function loginUser(username) {
+            currentUsername = username;
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('learner-name-display').textContent = username;
+
+            const result = await loadStateFromServer(username);
+
+            if (result) {
+                const serverState = result.state;
+                unlockedLevelMax = Number.isInteger(serverState.unlockedLevelMax)
+                    ? Math.max(1, Math.min(100, serverState.unlockedLevelMax))
+                    : 1;
+                try {
+                    localStorage.setItem(progressKey(), String(unlockedLevelMax));
+                    localStorage.setItem(statsKey(), JSON.stringify(serverState.stats || { lastActiveDate: null, streakCount: 0, levelsToday: 0 }));
+                    localStorage.setItem(badgesKey(), JSON.stringify(Array.isArray(serverState.badges) ? serverState.badges : []));
+                } catch (err) {
+                    console.error('Failed to cache server state locally:', err);
+                }
+            } else {
+                // Offline / server unreachable: fall back to this browser's cache for
+                // this specific username, if any was ever saved here before.
+                const savedUserProgress = localStorage.getItem(progressKey());
+                const parsedProgress = parseInt(savedUserProgress, 10);
+                unlockedLevelMax = (savedUserProgress !== null && !isNaN(parsedProgress) && parsedProgress >= 1 && parsedProgress <= 100)
+                    ? parsedProgress
+                    : 1;
+            }
+
+            loadActiveLevel(unlockedLevelMax);
+            renderHorizontalRoadmap();
+            renderDailyStats(readDailyStats());
+            renderBadgeCollection(readMilestoneBadges());
+        }
+
+        // Clears the remembered username on this browser and shows the entry
+        // screen again so a different profile can be entered/created.
+        function switchUser() {
+            localStorage.removeItem(ACTIVE_USERNAME_KEY);
+            currentUsername = null;
+            document.getElementById('learner-name-display').textContent = '-';
+            const input = document.getElementById('username-input');
+            input.value = '';
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            input.focus();
+        }
+
+        // Central updater: every change to unlockedLevelMax must flow through here so
+        // progress is always securely committed to localStorage (instant, offline-safe)
+        // AND synced to the server (so it carries over to other devices/browsers too).
+        function commitLevelProgress(newMax) {
+            const clamped = Math.max(1, Math.min(100, newMax));
+            const leveledUp = clamped > unlockedLevelMax;
+            unlockedLevelMax = clamped;
+            try {
+                localStorage.setItem(progressKey(), String(unlockedLevelMax));
+            } catch (err) {
+                console.error('Failed to persist level progress:', err);
+            }
+            if (leveledUp) {
+                updateDailyStats();
+                if (generatedLevelData.isMilestone && generatedLevelData.sentence) {
+                    // The level just passed (currentLevel) is the milestone being rewarded.
+                    awardMilestoneBadge(currentLevel);
+                }
+            }
+            renderHorizontalRoadmap();
+            syncStateToServer();
+        }
+
+        // Reads/updates the daily streak + "levels completed today" counters.
+        function updateDailyStats() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            let stats = readDailyStats();
+
+            if (stats.lastActiveDate === todayStr) {
+                stats.levelsToday += 1;
+            } else {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().slice(0, 10);
+                stats.streakCount = (stats.lastActiveDate === yesterdayStr) ? stats.streakCount + 1 : 1;
+                stats.levelsToday = 1;
+                stats.lastActiveDate = todayStr;
+            }
+
+            try {
+                localStorage.setItem(statsKey(), JSON.stringify(stats));
+            } catch (err) {
+                console.error('Failed to persist daily stats:', err);
+            }
+            renderDailyStats(stats);
+        }
+
+        function readDailyStats() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(statsKey()));
+                if (parsed && typeof parsed === 'object') {
+                    return {
+                        lastActiveDate: parsed.lastActiveDate || null,
+                        streakCount: Number.isInteger(parsed.streakCount) ? parsed.streakCount : 0,
+                        levelsToday: Number.isInteger(parsed.levelsToday) ? parsed.levelsToday : 0
+                    };
+                }
+            } catch (err) {
+                console.error('Failed to read daily stats:', err);
+            }
+            return { lastActiveDate: null, streakCount: 0, levelsToday: 0 };
+        }
+
+        function renderDailyStats(stats) {
+            const el = document.getElementById('daily-stats-text');
+            if (!el) return;
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const levelsToday = stats.lastActiveDate === todayStr ? stats.levelsToday : 0;
+            el.textContent = `${stats.streakCount}-day streak · ${levelsToday} today`;
+        }
+
+        // Awards a milestone badge (once) and unlocks its bonus phrase.
+        function awardMilestoneBadge(lvl) {
+            let badges = readMilestoneBadges();
+            if (!badges.includes(lvl)) {
+                badges.push(lvl);
+                try {
+                    localStorage.setItem(badgesKey(), JSON.stringify(badges));
+                } catch (err) {
+                    console.error('Failed to persist milestone badges:', err);
+                }
+            }
+            renderBadgeCollection(badges);
+        }
+
+        function readMilestoneBadges() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(badgesKey()));
+                if (Array.isArray(parsed)) return parsed.filter(n => Number.isInteger(n));
+            } catch (err) {
+                console.error('Failed to read milestone badges:', err);
+            }
+            return [];
+        }
+
+        function renderBadgeCollection(badges) {
+            const container = document.getElementById('badge-collection-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            for (let m = 10; m <= 100; m += 10) {
+                const earned = badges.includes(m);
+                const bonusWord = bonusVocabPool[(m / 10) - 1];
+                const badgeEl = document.createElement('div');
+                badgeEl.className = earned
+                    ? "flex flex-col items-center justify-center p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 min-w-[68px] cursor-pointer hover:bg-amber-100 transition-all"
+                    : "flex flex-col items-center justify-center p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-300 min-w-[68px]";
+                badgeEl.innerHTML = earned
+                    ? `<i class="fa-solid fa-trophy text-sm mb-1"></i><span class="text-[9px] font-bold">LVL ${m}</span>`
+                    : `<i class="fa-solid fa-lock text-sm mb-1"></i><span class="text-[9px] font-bold">LVL ${m}</span>`;
+                if (earned) {
+                    badgeEl.title = `Bonus phrase unlocked: "${bonusWord.de}" (${bonusWord.en})`;
+                    badgeEl.onclick = () => playGermanAudio(bonusWord.de);
+                }
+                container.appendChild(badgeEl);
+            }
+        }
+
+        function updatePlaybackRate(val) {
+            globalPlaybackRate = parseFloat(val);
+            document.getElementById('speedValue').textContent = `${val}x`;
+        }
+
+        function conjugateVerb(subjectObj, verbObj) {
+            let adjustedVerb = verbObj.de; // default: "ich" form
+
+            // STRONG IRREGULAR VERB FIXES (e -> i conversions for essen and sehen)
+            if (subjectObj.de === "Du") {
+                if (verbObj.inf === "essen") adjustedVerb = "isst";
+                else if (verbObj.inf === "sehen") adjustedVerb = "siehst";
+                else adjustedVerb = verbObj.inf.replace("en", "st").replace("stt", "st");
+            }
+            if (subjectObj.de === "Er" || subjectObj.de === "Sie") {
+                if (verbObj.inf === "essen") adjustedVerb = "isst";
+                else if (verbObj.inf === "sehen") adjustedVerb = "sieht";
+                else adjustedVerb = verbObj.inf.replace("en", "t");
+            }
+            if (subjectObj.de === "Wir") adjustedVerb = verbObj.inf;
+            if (subjectObj.de === "Ihr") adjustedVerb = verbObj.inf.replace("en", "t");
+
+            return adjustedVerb;
+        }
+
+        function generateLevelContent(lvl) {
+            const subIndex = (lvl - 1) % vocabPool.subjects.length;
+            const verbObj = vocabPool.verbs[(lvl - 1) % vocabPool.verbs.length];
+            const objObj = vocabPool.objects[(lvl - 1) % vocabPool.objects.length];
+            const advObj = vocabPool.adverbs[(lvl - 1) % vocabPool.adverbs.length];
+            const ruleText = vocabPool.rules[(lvl - 1) % vocabPool.rules.length];
+            const subject = vocabPool.subjects[subIndex];
+            const adjustedVerb = conjugateVerb(subject, verbObj);
+
+            let wordsArray = [];
+            let correctSentenceArray = [];
+            let englishTranslationStr = "";
+            const isMilestone = lvl % 10 === 0;
+            // Milestone difficulty curve: Tier 1 (10-40) = one linked clause,
+            // Tier 2 (50-90) = a second independent clause, Tier 3 (100) = a third causal clause.
+            const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
+
+            if (isMilestone) {
+                const adjObj = vocabPool.adjectives[(lvl - 1) % vocabPool.adjectives.length];
+                const secondObjObj = vocabPool.objects[lvl % vocabPool.objects.length];
+
+                correctSentenceArray = [subject.de, adjustedVerb, advObj.de, adjObj.de, objObj.de];
+                wordsArray = [
+                    { de: subject.de, en: subject.en },
+                    { de: adjustedVerb, en: `${verbObj.en}` },
+                    { de: advObj.de, en: advObj.en },
+                    { de: adjObj.de, en: adjObj.en },
+                    { de: objObj.de, en: objObj.en }
+                ];
+                let englishParts = [`${subject.en} ${advObj.en} ${verbObj.en}s ${adjObj.en} ${objObj.en}`];
+
+                if (milestoneTier >= 2) {
+                    // Tier 2+: link a second independent clause with a different subject/verb.
+                    const subject2 = vocabPool.subjects[lvl % vocabPool.subjects.length];
+                    const verbObj2 = vocabPool.verbs[(lvl + 2) % vocabPool.verbs.length];
+                    const adjustedVerb2 = conjugateVerb(subject2, verbObj2);
+
+                    correctSentenceArray = correctSentenceArray.concat(["und", subject2.de, adjustedVerb2, secondObjObj.de]);
+                    wordsArray = wordsArray.concat([
+                        { de: subject2.de, en: subject2.en },
+                        { de: adjustedVerb2, en: verbObj2.en },
+                        { de: secondObjObj.de, en: secondObjObj.en }
+                    ]);
+                    englishParts.push(`and ${subject2.en} ${verbObj2.en}s ${secondObjObj.en}`);
+                } else {
+                    correctSentenceArray = correctSentenceArray.concat(["und", secondObjObj.de]);
+                    wordsArray.push({ de: secondObjObj.de, en: secondObjObj.en });
+                    englishParts.push(`and ${secondObjObj.en}`);
+                }
+
+                if (milestoneTier >= 3) {
+                    // Tier 3 (level 100 only): append a third causal clause for maximum length.
+                    const subject3 = vocabPool.subjects[(lvl + 3) % vocabPool.subjects.length];
+                    const verbObj3 = vocabPool.verbs[(lvl + 4) % vocabPool.verbs.length];
+                    const adjustedVerb3 = conjugateVerb(subject3, verbObj3);
+                    const thirdObjObj = vocabPool.objects[(lvl + 5) % vocabPool.objects.length];
+
+                    correctSentenceArray = correctSentenceArray.concat(["denn", subject3.de, adjustedVerb3, thirdObjObj.de]);
+                    wordsArray = wordsArray.concat([
+                        { de: subject3.de, en: subject3.en },
+                        { de: adjustedVerb3, en: verbObj3.en },
+                        { de: thirdObjObj.de, en: thirdObjObj.en }
+                    ]);
+                    englishParts.push(`because ${subject3.en} ${verbObj3.en}s ${thirdObjObj.en}`);
+                }
+
+                englishTranslationStr = englishParts.join(" ") + ".";
+            } else if (lvl % 2 === 1) {
+                correctSentenceArray = [subject.de, adjustedVerb, objObj.de];
+                wordsArray = [{ de: subject.de, en: subject.en }, { de: adjustedVerb, en: `${verbObj.en}` }, { de: objObj.de, en: objObj.en }];
+                englishTranslationStr = `${subject.en} ${verbObj.en}s ${objObj.en}.`;
+            } else {
+                correctSentenceArray = [subject.de, adjustedVerb, advObj.de, objObj.de];
+                wordsArray = [{ de: subject.de, en: subject.en }, { de: adjustedVerb, en: `${verbObj.en}` }, { de: advObj.de, en: advObj.en }, { de: objObj.de, en: objObj.en }];
+                englishTranslationStr = `${subject.en} ${advObj.en} ${verbObj.en}s ${objObj.en}.`;
+            }
+
+            return {
+                title: isMilestone
+                    ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — Complex Structures with "${objObj.de}"`
+                    : `Level ${lvl}: Application of Context Phrases using "${objObj.de}"`,
+                desc: isMilestone
+                    ? `A special milestone challenge (Tier ${milestoneTier}): combine multiple linked clauses into one extended sentence.`
+                    : `Translate target thoughts by linking structural active parameters elements accurately.`,
+                rule: ruleText,
+                vocab: wordsArray,
+                isMilestone: isMilestone,
+                milestoneTier: milestoneTier,
+                sentence: { correctArray: correctSentenceArray, en: englishTranslationStr, de: correctSentenceArray.join(" ") + "." }
+            };
+        }
+
+        function loadActiveLevel(lvl) {
+            currentLevel = lvl;
+            generatedLevelData = generateLevelContent(lvl);
+
+            applyMilestoneTheme(lvl, generatedLevelData);
+
+            document.getElementById('header-desc').textContent = generatedLevelData.desc;
+            document.getElementById('syntax-rule-text').textContent = generatedLevelData.rule;
+            document.getElementById('game-english-translation').textContent = generatedLevelData.sentence.en;
+            document.getElementById('game-typing-input').value = "";
+            document.getElementById('text-fallback-input').value = "";
+
+            const vocabGrid = document.getElementById('step1-vocab-grid');
+            vocabGrid.innerHTML = '';
+            generatedLevelData.vocab.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "p-2 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between hover:bg-indigo-50/40 transition-all cursor-pointer text-xs";
+                card.onclick = () => playGermanAudio(item.de);
+                card.innerHTML = `<div><p class="font-bold text-slate-900">${item.de}</p><p class="text-[10px] text-slate-400">${item.en}</p></div><button class="w-5 h-5 rounded bg-white border text-slate-500 flex items-center justify-center text-[9px]"><i class="fa-solid fa-volume-high"></i></button>`;
+                vocabGrid.appendChild(card);
+            });
+
+            document.getElementById('step3-speaking-section').classList.add('opacity-40', 'pointer-events-none');
+            document.getElementById('gameResultAlert').classList.add('hidden');
+            document.getElementById('target-speaking-de').textContent = generatedLevelData.sentence.de;
+            document.getElementById('target-speaking-en').textContent = generatedLevelData.sentence.en;
+            document.getElementById('speechFeedbackBox').classList.add('hidden');
+
+            highlightHorizontalRoadmap();
+        }
+
+        // Applies the "Special Boss Milestone Level" theme every 10 levels (10, 20, 30, ...)
+        function applyMilestoneTheme(lvl, levelData) {
+            const heroPanel = document.getElementById('hero-panel');
+            const badge = document.getElementById('header-badge');
+            const title = document.getElementById('header-title');
+            const announcer = document.getElementById('milestone-announcer');
+
+            if (levelData.isMilestone) {
+                const tierIcon = levelData.milestoneTier >= 3 ? "fa-trophy" : (levelData.milestoneTier >= 2 ? "fa-crown" : "fa-star");
+                heroPanel.className = "bg-gradient-to-br from-rose-950 via-red-900 to-rose-950 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between relative overflow-hidden ring-2 ring-amber-400/50 transition-all";
+                badge.className = "bg-amber-400/20 text-amber-300 border border-amber-300/30 font-bold px-3 py-0.5 rounded-full text-xs uppercase tracking-widest inline-block mb-2";
+                badge.innerHTML = `<i class="fa-solid ${tierIcon} mr-1"></i> ✨ Special Boss Milestone Level`;
+                title.innerHTML = `<i class="fa-solid fa-star text-amber-300 mr-1.5"></i>${levelData.title}`;
+
+                // Accessibility: color alone shouldn't carry the signal — announce it for
+                // screen readers and play a distinct chime as an audible cue.
+                if (announcer) announcer.textContent = `Special Boss Milestone Level ${lvl} unlocked — extra challenge ahead.`;
+                playMilestoneChime();
+            } else {
+                heroPanel.className = "bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between relative overflow-hidden transition-all";
+                badge.className = "bg-indigo-500/30 text-indigo-300 border border-indigo-400/20 font-bold px-3 py-0.5 rounded-full text-xs uppercase tracking-widest inline-block mb-2";
+                badge.textContent = `Level ${lvl} / 100`;
+                title.textContent = levelData.title;
+                if (announcer) announcer.textContent = "";
+            }
+        }
+
+        // Short two-tone chime for milestone levels, independent of the German TTS voice.
+        function playMilestoneChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch (err) {
+                console.error('Milestone chime failed:', err);
+            }
+        }
+
+        // Strips punctuation/casing so trailing full-stops and capitalization don't
+        // punish the learner, while still requiring correct word structure/order.
+        function normalizeGermanSentence(str) {
+            return str
+                .toLowerCase()
+                .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "")
+                .trim()
+                .replace(/\s+/g, " ");
+        }
+
+        function verifySentenceGame() {
+            const typedRaw = document.getElementById('game-typing-input').value.trim();
+            const alertBox = document.getElementById('gameResultAlert');
+            const alertText = document.getElementById('gameResultText');
+            const targetSentence = generatedLevelData.sentence.de;
+
+            alertBox.classList.remove('hidden');
+
+            if (!typedRaw) {
+                alertBox.className = "mt-3 p-2.5 rounded-xl border text-[11px] font-medium flex items-center justify-between bg-rose-50 border-rose-200 text-rose-800";
+                alertText.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Type your German translation before checking.`;
+                return;
+            }
+
+            if (normalizeGermanSentence(typedRaw) === normalizeGermanSentence(targetSentence)) {
+                alertBox.className = "mt-3 p-2.5 rounded-xl border text-[11px] font-medium flex items-center justify-between bg-emerald-50 border-emerald-200 text-emerald-800";
+                alertText.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Correct! Step 3 Challenge Exam unlocked.`;
+                document.getElementById('step3-speaking-section').classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                alertBox.className = "mt-3 p-2.5 rounded-xl border text-[11px] font-medium flex items-center justify-between bg-rose-50 border-rose-200 text-rose-800";
+                alertText.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Not quite. Review the syntax rule and try again.`;
+            }
+            document.getElementById('btn-play-game-audio').onclick = () => playGermanAudio(targetSentence);
+        }
+
+        function playGermanAudio(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                if (selectedVoiceName) {
+                    const matchedVoice = systemVoices.find(v => v.name === selectedVoiceName);
+                    if (matchedVoice) utterance.voice = matchedVoice;
+                }
+                utterance.lang = 'de-DE';
+                utterance.rate = globalPlaybackRate;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playTargetSpeakingAudio() { playGermanAudio(generatedLevelData.sentence.de); }
+
+        function initializeAudioRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.lang = 'de-DE';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onstart = () => {
+                    isRecording = true;
+                    document.getElementById('micIcon').className = "fa-solid fa-spinner fa-spin";
+                    document.getElementById('micBtn').classList.add('mic-active');
+                    document.getElementById('micStatus').textContent = "Listening carefully... speak now!";
+                };
+                
+                recognition.onerror = (event) => { 
+                    console.log("Speech Error Captured:", event.error);
+                    if (event.error === 'not-allowed' || event.error === 'service-not-allowed' || event.error === 'audio-capture') {
+                        document.getElementById('micStatus').textContent = "Microphone unavailable — switched to typing mode.";
+                        if (usingVoiceInput) toggleInputMethod();
+                    } else {
+                        document.getElementById('micStatus').textContent = "No match captured. Try Typing Mode below!";
+                    }
+                    resetMicInputState(); 
+                };
+                
+                recognition.onend = () => { resetMicInputState(); };
+                
+                recognition.onresult = (e) => { 
+                    if(e.results && e.results[0]) {
+                        processVoiceDiffValidation(e.results[0][0].transcript); 
+                    }
+                };
+            } else {
+                // Speech recognition unsupported in this browser: switch straight to typing
+                // mode instead of leaving a mic button that can never work.
+                if (usingVoiceInput) toggleInputMethod();
+            }
+        }
+
+        function toggleMicInput() { 
+            if (recognition) {
+                if (isRecording) {
+                    recognition.stop();
+                } else {
+                    try {
+                        recognition.start();
+                    } catch(err) {
+                        recognition.stop();
+                        setTimeout(() => recognition.start(), 200);
+                    }
+                }
+            } else if (usingVoiceInput) {
+                // Shouldn't normally happen (initializeAudioRecognition already switches
+                // to typing mode when unsupported), but fall back safely just in case.
+                toggleInputMethod();
+            }
+        }
+        
+        function resetMicInputState() {
+            isRecording = false;
+            document.getElementById('micIcon').className = "fa-solid fa-microphone";
+            document.getElementById('micBtn').classList.remove('mic-active');
+            if(document.getElementById('micStatus').textContent === "Listening carefully... speak now!") {
+                document.getElementById('micStatus').textContent = "Processing finished.";
+            }
+        }
+
+        function processVoiceDiffValidation(spokenText) {
+            const targetSentence = generatedLevelData.sentence.de;
+            const targetCleanArray = targetSentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").toLowerCase().split(/\s+/);
+            const spokenCleanArray = spokenText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").toLowerCase().split(/\s+/);
+            const displayTargetOriginalWords = targetSentence.split(/\s+/);
+            
+            const feedbackBox = document.getElementById('speechFeedbackBox');
+            const diffVisualization = document.getElementById('speechDiffVisualization');
+            const titleElement = document.getElementById('speechFeedbackTitle');
+
+            diffVisualization.innerHTML = '';
+            feedbackBox.classList.remove('hidden');
+            document.getElementById('speechFeedbackTranscript').textContent = `Entered/Heard: "${spokenText}"`;
+
+            let correctWordCount = 0;
+            displayTargetOriginalWords.forEach(word => {
+                const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").toLowerCase().trim();
+                const textSpan = document.createElement('span');
+                textSpan.textContent = word + " ";
+
+                if (spokenCleanArray.includes(cleanWord)) {
+                    textSpan.className = "text-emerald-700 bg-emerald-50 px-1 rounded";
+                    correctWordCount++;
+                } else {
+                    textSpan.className = "text-rose-600 bg-rose-50 px-1 rounded line-through";
+                }
+                diffVisualization.appendChild(textSpan);
+            });
+
+            // EASIER CHALLENGE CALCULATION: Requires 50% or more matching accuracy
+            if ((correctWordCount / displayTargetOriginalWords.length) >= 0.50) {
+                feedbackBox.className = "mt-3 p-3 rounded-xl border text-left text-[11px] font-medium bg-emerald-50/50 border-emerald-200 text-emerald-900";
+                titleElement.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Verified Pass! Next level unlocked.`;
+                
+                if (currentLevel === unlockedLevelMax && unlockedLevelMax < 100) {
+                    commitLevelProgress(unlockedLevelMax + 1);
+                }
+            } else {
+                feedbackBox.className = "mt-3 p-3 rounded-xl border text-left text-[11px] font-medium bg-rose-50/50 border-rose-200 text-rose-900";
+                titleElement.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-600 mr-1"></i> Match structure closely (Aim for at least half the phrase correct)!`;
+            }
+        }
+
+        function renderHorizontalRoadmap() {
+            const container = document.getElementById('level-roadmap-container');
+            container.innerHTML = '';
+
+            document.getElementById('roadmap-summary-badge').textContent = `Stage Progress Max: ${unlockedLevelMax}/100`;
+            document.getElementById('completion-percentage').textContent = `${unlockedLevelMax}%`;
+
+            for (let i = 1; i <= 100; i++) {
+                const itemCard = document.createElement('button');
+                itemCard.id = `timeline-node-${i}`;
+                const isLocked = i > unlockedLevelMax;
+                
+                if (isLocked) {
+                    itemCard.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold bg-slate-100 text-slate-300 border border-slate-200/50 cursor-not-allowed select-none transition-all";
+                    itemCard.disabled = true;
+                    itemCard.innerHTML = `<span class="block text-[8px] opacity-60">LVL ${i}</span><i class="fa-solid fa-lock mt-1 block opacity-40"></i>`;
+                } else {
+                    itemCard.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-all";
+                    itemCard.onclick = () => loadActiveLevel(i);
+                    itemCard.innerHTML = `<span class="block text-[8px] text-slate-400">LVL ${i}</span><i class="fa-solid fa-circle-play mt-1 text-indigo-500 block text-[10px]"></i>`;
+                }
+                container.appendChild(itemCard);
+            }
+            highlightHorizontalRoadmap();
+        }
+
+        function highlightHorizontalRoadmap() {
+            for (let i = 1; i <= 100; i++) {
+                const node = document.getElementById(`timeline-node-${i}`);
+                if (node && !node.disabled) {
+                    if (i === currentLevel) {
+                        node.className = "inline-block min-w-[75px] p-2 rounded-xl text-center text-[10px] font-black bg-indigo-600 text-white border border-indigo-600 shadow-md shadow-indigo-100 transition-all scale-105";
+                        node.querySelector('span').className = "block text-[8px] text-indigo-200";
+                        node.querySelector('i').className = "fa-solid fa-fire animate-bounce mt-1 block text-amber-300 text-[10px]";
+                        node.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    } else {
+                        node.className = "inline-block min-w-[70px] p-2 rounded-xl text-center text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-all";
+                        node.querySelector('span').className = "block text-[8px] text-slate-400";
+                        node.querySelector('i').className = "fa-solid fa-circle-play mt-1 text-indigo-500 block text-[10px]";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

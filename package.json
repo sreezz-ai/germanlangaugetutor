@@ -1,0 +1,9 @@
+{
+  "name": "deutsch100",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Deutsch100 - German Learning Portal (static site + Netlify Function + Netlify Blobs, multi-user progress by username)",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
