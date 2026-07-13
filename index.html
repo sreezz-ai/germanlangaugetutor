@@ -209,22 +209,31 @@
     <script>
 const courseModules = [
     {
-        stageTitle: "1. Daily Routine & Survival Basics",
-        syntaxRule: "Rule: Position 2 inversion. If a time expression (e.g., 'Heute', 'Morgens') starts the sentence, the verb stays in Position 2, pushing the subject to Position 3.",
+        stageTitle: "1. Basic Conversations & Everyday Expressions",
+        syntaxRule: "Rule: In a standard German declarative sentence, the conjugated verb always takes Position 2.",
         sentences: [
-            { de: "Ich trinke morgens Kaffee, aber ich trinke abends Tee.", en: "I drink coffee in the morning, but I drink tea in the evening." },
-            { de: "Heute lerne ich Deutsch, weil es Spaß macht.", en: "Today I am learning German because it is fun." },
-            { de: "Ich esse mein Brot und gehe schnell zur Arbeit.", en: "I eat my bread and go quickly to work." },
-            { de: "Es tut mir leid, aber ich verstehe das nicht.", en: "I am sorry, but I do not understand that." },
-            { de: "Ich suche den Bahnhof, denn ich muss nach Hause fahren.", en: "I am looking for the train station because I have to go home." }
+            { de: "Hallo, wie geht es dir heute?", en: "Hello, how are you today?" },
+            { de: "Ich komme aus Berlin und wohne jetzt hier.", en: "I come from Berlin and live here now." },
+            { de: "Wo ist der Bahnhof, bitte?", en: "Where is the train station, please?" },
+            { de: "Ich verstehe dich sehr gut.", en: "I understand you very well." },
+            { de: "Sprechen Sie Englisch oder Deutsch?", en: "Do you speak English or German?" },
+            { de: "Das Wetter ist heute wirklich schön.", en: "The weather is really beautiful today." },
+            { de: "Ich heiße Max und das ist meine Freundin.", en: "My name is Max and this is my girlfriend." },
+            { de: "Wo kann ich ein Ticket kaufen?", en: "Where can I buy a ticket?" },
+            { de: "Wie viel kostet dieses Buch hier?", en: "How much does this book here cost?" },
+            { de: "Ich trinke morgens immer einen Kaffee.", en: "I always drink a coffee in the morning." }
         ],
         vocabList: [
-            { de: "morgens", en: "in the morning" },
-            { de: "abends", en: "in the evening" },
-            { de: "zur Arbeit", en: "to work" },
-            { de: "nach Hause", en: "towards home" },
+            { de: "wohnen", en: "to live / reside" },
             { de: "der Bahnhof", en: "the train station" },
-            { de: "verstehe", en: "understand" }
+            { de: "verstehe", en: "understand" },
+            { de: "heute", en: "today" },
+            { de: "bitte", en: "please" },
+            { de: "wirklich", en: "really / actually" },
+            { de: "kaufen", en: "to buy" },
+            { de: "kosten", en: "to cost" },
+            { de: "immer", en: "always" },
+            { de: "das Wetter", en: "the weather" }
         ]
     },
     {
@@ -235,14 +244,24 @@ const courseModules = [
             { de: "Wir können ins Kino gehen, wenn du Lust hast.", en: "We can go to the cinema if you feel like it." },
             { de: "Ich komme später, weil mein Bus Verspätung hat.", en: "I am coming later because my bus is delayed." },
             { de: "Trinkst du lieber Kaffee oder möchtest du ein Wasser?", en: "Do you prefer to drink coffee or would you like a water?" },
-            { de: "Sie kauft kein Obst, obwohl sie gesund leben will.", en: "She is buying no fruit, although she wants to live healthily." }
+            { de: "Sie kauft kein Obst, obwohl sie gesund leben will.", en: "She is buying no fruit, although she wants to live healthily." },
+            { de: "Ich freue mich, dass du morgen zu Besuch kommst.", en: "I am glad that you are coming to visit tomorrow." },
+            { de: "Wir bleiben zu Hause, wenn es heute regnet.", en: "We are staying at home if it rains today." },
+            { de: "Er lernt Deutsch, weil er in München arbeiten möchte.", en: "He is learning German because he wants to work in Munich." },
+            { de: "Ich weiß nicht, ob das Museum heute geöffnet ist.", en: "I don't know whether the museum is open today." },
+            { de: "Sie geht schlafen, da sie sehr müde ist.", en: "She is going to sleep since she is very tired." }
         ],
         vocabList: [
             { de: "wissen", en: "to know (facts)" },
             { de: "Lust haben", en: "to feel like doing something" },
             { de: "die Verspätung", en: "the delay" },
             { de: "lieber", en: "rather / prefer to" },
-            { de: "obwohl", en: "although" }
+            { de: "obwohl", en: "although" },
+            { de: "morgen", en: "tomorrow" },
+            { de: "regnen", en: "to rain" },
+            { de: "arbeiten", en: "to work" },
+            { de: "ob", en: "whether / if" },
+            { de: "müde", en: "tired" }
         ]
     },
     {
@@ -253,32 +272,52 @@ const courseModules = [
             { de: "Die Rechnung ist falsch, aber ich bezahle trotzdem mit Karte.", en: "The bill is wrong, but I am paying with card anyway." },
             { de: "Können Sie mir helfen, da mein Koffer verloren ist?", en: "Can you help me, since my suitcase is lost?" },
             { de: "Ich kaufe diese Jacke nicht, weil sie zu teuer ist.", en: "I am not buying this jacket because it is too expensive." },
-            { de: "Wo ist der Supermarkt, der bis Mitternacht geöffnet hat?", en: "Where is the supermarket that is open until midnight?" }
+            { de: "Wo ist der Supermarkt, der bis Mitternacht geöffnet hat?", en: "Where is the supermarket that is open until midnight?" },
+            { de: "Ich möchte die Speisekarte sehen, bevor ich etwas bestelle.", en: "I would like to see the menu before I order something." },
+            { de: "Können wir bar bezahlen oder nehmen Sie nur Kreditkarten?", en: "Can we pay in cash or do you only take credit cards?" },
+            { de: "Ich muss ein neues Ticket kaufen, weil der Zug weg ist.", en: "I must buy a new ticket because the train is gone." },
+            { de: "Gibt es hier ein gutes Restaurant, das lokale Küche anbietet?", en: "Is there a good restaurant here that offers local cuisine?" },
+            { de: "Das Hotel ist komplett ausgebucht, deshalb suchen wir eine Alternative.", en: "The hotel is completely booked up, therefore we are looking for an alternative." }
         ],
         vocabList: [
             { de: "die Rechnung", en: "the bill / invoice" },
             { de: "trotzdem", en: "anyway / nevertheless" },
             { de: "verloren", en: "lost" },
             { de: "teuer", en: "expensive" },
-            { de: "geöffnet", en: "open" }
+            { de: "geöffnet", en: "open" },
+            { de: "bestellen", en: "to order" },
+            { de: "bar", en: "in cash" },
+            { de: "der Zug", en: "the train" },
+            { de: "anbieten", en: "to offer" },
+            { de: "ausgebucht", en: "booked up" }
         ]
     },
     {
         stageTitle: "4. Work, Appointments & Digital Life",
-        syntaxRule: "Rule: When dealing with compound past tenses or passive expressions, secondary helper verbs wrap around the target action word at the end of the clause.",
+        syntaxRule: "Rule: Coordinating conjunctions (aber, denn, und, sondern, oder) occupy 'Position 0', meaning they do not change the standard sentence layout.",
         sentences: [
             { de: "Ich schicke dir eine E-Mail, sobald das Projekt fertig ist.", en: "I will send you an email as soon as the project is finished." },
             { de: "Wir müssen den Termin verschieben, weil ich krank bin.", en: "We have to postpone the appointment because I am sick." },
             { de: "Mein Laptop funktioniert nicht, obwohl das Ladekabel angeschlossen ist.", en: "My laptop is not working, although the charging cable is plugged in." },
             { de: "Ich bin im Büro, aber ich habe jetzt keine Zeit.", en: "I am in the office, but I have no time right now." },
-            { de: "Kannst du mir den Link senden, damit ich die Datei herunterlade?", en: "Can you send me the link so that I can download the file?" }
+            { de: "Kannst du mir den Link senden, damit ich die Datei herunterlade?", en: "Can you send me the link so that I can download the file?" },
+            { de: "Ich habe das Passwort vergessen und kann mich nicht anmelden.", en: "I forgot the password and cannot log in." },
+            { de: "Das Meeting beginnt um zehn Uhr, also sei bitte pünktlich.", en: "The meeting begins at ten o'clock, so please be on time." },
+            { de: "Ich arbeite im Homeoffice, denn die Büros werden renoviert.", en: "I am working from home because the offices are being renovated." },
+            { de: "Hast du die Datei gespeichert, bevor der PC abgestürzt ist?", en: "Did you save the file before the PC crashed?" },
+            { de: "Ich muss den Bericht ausdrucken, aber der Drucker hat kein Papier.", en: "I must print out the report, but the printer has no paper." }
         ],
         vocabList: [
             { de: "sobald", en: "as soon as" },
             { de: "verschieben", en: "to postpone / shift" },
             { de: "angeschlossen", en: "connected / plugged in" },
             { de: "damit", en: "so that / order to" },
-            { de: "herunterlade", en: "download" }
+            { de: "herunterladen", en: "to download" },
+            { de: "anmelden", en: "to log in / register" },
+            { de: "pünktlich", en: "punctual / on time" },
+            { de: "gespeichert", en: "saved" },
+            { de: "abgestürzt", en: "crashed" },
+            { de: "der Bericht", en: "the report" }
         ]
     },
     {
@@ -289,31 +328,181 @@ const courseModules = [
             { de: "Rufen Sie einen Krankenwagen, da es einen Unfall gab!", en: "Call an ambulance, since there was an accident!" },
             { de: "Wo ist die nächste Apotheke, die am Wochenende offen ist?", en: "Where is the nearest pharmacy that is open on the weekend?" },
             { de: "Es ist gefährlich hier, deshalb müssen wir sofort gehen.", en: "It is dangerous here, that's why we must go immediately." },
-            { de: "Gibt es ein Krankenhaus in der Nähe, das Englisch spricht?", en: "Is there a hospital nearby that speaks English?" }
+            { de: "Gibt es ein Krankenhaus in der Nähe, das Englisch spricht?", en: "Is there a hospital nearby that speaks English?" },
+            { de: "Ich habe meinen Pass verloren, wo ist das Konsulat?", en: "I lost my passport, where is the consulate?" },
+            { de: "Helfen Sie mir bitte, ich habe mich in der Stadt verlaufen.", en: "Please help me, I have lost my way in the city." },
+            { de: "Nehmen Sie diese Medikamente dreimal täglich nach dem Essen.", en: "Take these medicines three times daily after meals." },
+            { de: "Achtung, die Straße ist wegen des Unwetters komplett gesperrt.", en: "Attention, the street is completely blocked due to the severe weather." },
+            { de: "Ich fühle mich nicht wohl und möchte nach Hause gehen.", en: "I don't feel well and would like to go home." }
         ],
         vocabList: [
             { de: "der Arzt", en: "the doctor" },
             { de: "der Krankenwagen", en: "the ambulance" },
             { de: "die Apotheke", en: "the pharmacy" },
             { de: "deshalb", en: "therefore / that's why" },
-            { de: "gefährlich", en: "dangerous" }
+            { de: "gefährlich", en: "dangerous" },
+            { de: "verlaufen", en: "to get lost (walking)" },
+            { de: "die Medikamente", en: "the medicines" },
+            { de: "gesperrt", en: "blocked / closed" },
+            { de: "das Unwetter", en: "the severe weather" },
+            { de: "wohl", en: "well / comfortable" }
+        ]
+    },
+    {
+        stageTitle: "6. Daily Routines, Habits & Leisure",
+        syntaxRule: "Rule: Separable verbs (e.g., aufstehen, anrufen) split up in simple present tense; the prefix flies straight to the very end of the sentence.",
+        sentences: [
+            { de: "Ich stehe jeden Morgen um sechs Uhr auf.", en: "I get up at six o'clock every morning." },
+            { de: "Am Wochenende kaufe ich immer im großen Supermarkt ein.", en: "On the weekend, I always shop at the big supermarket." },
+            { de: "Ich rufe dich an, wenn ich zu Hause bin.", en: "I will call you when I am at home." },
+            { de: "Der Film fängt um acht Uhr am Abend an.", en: "The movie starts at eight o'clock in the evening." },
+            { de: "Jeden Abend bereite ich mein Mittagessen für morgen vor.", en: "Every evening I prepare my lunch for tomorrow." },
+            { de: "Wir ziehen nächste Woche in eine neue Wohnung um.", en: "We are moving into a new apartment next week." },
+            { de: "Er sieht am liebsten am Wochenende stundenlang fern.", en: "He likes watching TV for hours on the weekend the most." },
+            { de: "Ich lade meine Freunde zu meiner Geburtstagsparty ein.", en: "I am inviting my friends to my birthday party." },
+            { de: "Mach bitte das Licht aus, wenn du den Raum verlässt.", en: "Please turn off the light when you leave the room." },
+            { de: "Der Zug kommt pünktlich auf Gleis vier an.", en: "The train arrives on time on platform four." }
+        ],
+        vocabList: [
+            { de: "aufstehen", en: "to get up" },
+            { de: "einkaufen", en: "to shop / purchase" },
+            { de: "anrufen", en: "to call (phone)" },
+            { de: "anfangen", en: "to begin / start" },
+            { de: "vorbereiten", en: "to prepare" },
+            { de: "umziehen", en: "to move (housing)" },
+            { de: "fernsehen", en: "to watch TV" },
+            { de: "einladen", en: "to invite" },
+            { de: "ausmachen", en: "to turn off / extinguish" },
+            { de: "ankommen", en: "to arrive" }
+        ]
+    },
+    {
+        stageTitle: "7. Talking About the Past (Perfekt)",
+        syntaxRule: "Rule: To build the conversational past tense (Perfekt), put 'haben' or 'sein' in Position 2 and throw the 'Gepast' participle (ge- verb) to the absolute end.",
+        sentences: [
+            { de: "Ich habe gestern ein neues Auto gekauft.", en: "I bought a new car yesterday." },
+            { de: "Wir sind am Sonntag nach Frankfurt gefahren.", en: "We drove to Frankfurt on Sunday." },
+            { de: "Hast du den neuen Film schon im Kino gesehen?", en: "Have you already seen the new movie at the cinema?" },
+            { de: "Er hat mir gestern eine lange Nachricht geschrieben.", en: "He wrote me a long message yesterday." },
+            { de: "Meine Familie ist letztes Jahr nach Spanien geflogen.", en: "My family flew to Spain last year." },
+            { de: "Ich habe meine Hausaufgaben am Nachmittag komplett vergessen.", en: "I completely forgot my homework in the afternoon." },
+            { de: "Wir haben in einem italienischen Restaurant zu Abend gegessen.", en: "We ate dinner in an Italian restaurant." },
+            { de: "Sie ist heute Morgen sehr spät aufgewacht.", en: "She woke up very late this morning." },
+            { de: "Ich habe das Buch gelesen, das du mir empfohlen hast.", en: "I read the book that you recommended to me." },
+            { de: "Der Lehrer hat uns die schwere Grammatikregel erklärt.", en: "The teacher explained the difficult grammar rule to us." }
+        ],
+        vocabList: [
+            { de: "gestern", en: "yesterday" },
+            { de: "gefahren", en: "driven / went (by vehicle)" },
+            { de: "gesehen", en: "seen" },
+            { de: "geschrieben", en: "written" },
+            { de: "geflogen", en: "flown" },
+            { de: "vergessen", en: "forgotten" },
+            { de: "gegessen", en: "eaten" },
+            { de: "aufgewacht", en: "woken up" },
+            { de: "gelesen", en: "read" },
+            { de: "erklärt", en: "explained" }
+        ]
+    },
+    {
+        stageTitle: "8. Expressing Conditions & Wishes (Konjunktiv II)",
+        syntaxRule: "Rule: Conditional statements using 'hätte' (would have) or 'würde' (would do) send the paired action's standard infinitive to the tail end.",
+        sentences: [
+            { de: "Wenn ich mehr Geld hätte, würde ich eine Weltreise machen.", en: "If I had more money, I would take a trip around the world." },
+            { de: "Ich würde dir helfen, wenn ich heute Zeit hätte.", en: "I would help you if I had time today." },
+            { de: "An deiner Stelle würde ich den Job sofort annehmen.", en: "In your place, I would accept the job immediately." },
+            { de: "Wenn es nicht regnen würde, könnten wir im Park grillen.", en: "If it weren't raining, we could have a barbecue in the park." },
+            { de: "Ich hätte gerne einen großen Kaffee mit viel Milch, bitte.", en: "I would like to have a large coffee with lots of milk, please." },
+            { de: "Wenn du mich gefragt hättest, hätte ich es dir gesagt.", en: "If you had asked me, I would have told you." },
+            { de: "Es wäre schön, wenn wir uns bald wiedersehen könnten.", en: "It would be nice if we could see each other again soon." },
+            { de: "Ich würde gerne Klavier spielen lernen, aber es ist schwer.", en: "I would like to learn to play the piano, but it is hard." },
+            { de: "Wenn ich ein Auto hätte, müsste ich nicht mit dem Bus fahren.", en: "If I had a car, I wouldn't have to go by bus." },
+            { de: "Ohne deine Hilfe hätte ich die Prüfung niemals bestanden.", en: "Without your help, I would have never passed the exam." }
+        ],
+        vocabList: [
+            { de: "hätte", en: "would have" },
+            { de: "würde", en: "would (do)" },
+            { de: "die Weltreise", en: "the trip around the world" },
+            { de: "annehmen", en: "to accept / assume" },
+            { de: "grillen", en: "to barbecue / grill" },
+            { de: "gerne", en: "gladly / would like" },
+            { de: "wäre", en: "would be" },
+            { de: "bald", en: "soon" },
+            { de: "niemals", en: "never" },
+            { de: "bestanden", en: "passed (an exam)" }
+        ]
+    },
+    {
+        stageTitle: "9. Asking Questions & Giving Commands (Imperativ)",
+        syntaxRule: "Rule: For direct commands, drop the subject pronoun entirely and launch the sentence with the stark, modified action verb up front.",
+        sentences: [
+            { de: "Geben Sie mir bitte die Dokumente bis morgen früh.", en: "Please give me the documents by tomorrow morning." },
+            { de: "Mach bitte das Fenster zu, es ist sehr kalt hier drin.", en: "Please close the window, it is very cold in here." },
+            { de: "Entschuldigung, wissen Sie, wo die Post ist?", en: "Excuse me, do you know where the post office is?" },
+            { de: "Ruf mich an, sobald du am Bahnhof angekommen bist!", en: "Call me as soon as you have arrived at the train station!" },
+            { de: "Sei vorsichtig, die Stufen hier sind extrem rutschig.", en: "Be careful, the steps here are extremely slippery." },
+            { de: "Hör mir gut zu, denn das ist eine wichtige Information.", en: "Listen to me carefully, because this is important information." },
+            { de: "Bringen Sie mir bitte ein Glas kaltes Wasser.", en: "Please bring me a glass of cold water." },
+            { de: "Vergiss nicht, den Herd auszuschalten, bevor du gehst.", en: "Don't forget to turn off the stove before you leave." },
+            { de: "Könnten Sie mir den Weg zum Stadtzentrum beschreiben?", en: "Could you describe the way to the city center to me?" },
+            { de: "Schreibe die Antwort auf, damit du sie nicht vergisst.", en: "Write down the answer so that you don't forget it." }
+        ],
+        vocabList: [
+            { de: "zumachen", en: "to close / shut" },
+            { de: "die Post", en: "the post office / mail" },
+            { de: "sei", en: "be (imperative singular)" },
+            { de: "vorsichtig", en: "careful / cautious" },
+            { de: "rutschig", en: "slippery" },
+            { de: "zuhören", en: "to listen to" },
+            { de: "bringen", en: "to bring" },
+            { de: "der Herd", en: "the stove / oven" },
+            { de: "beschreiben", en: "to describe" },
+            { de: "aufschreiben", en: "to write down" }
+        ]
+    },
+    {
+        stageTitle: "10. Opinions, Debates & Making Comparisons",
+        syntaxRule: "Rule: Adjective endings and comparisons change structures. 'Je... desto...' constructs throw verbs to opposite poles of matching relative clauses.",
+        sentences: [
+            { de: "Ich denke, dass diese Option viel besser als die andere ist.", en: "I think that this option is much better than the other one." },
+            { de: "Je mehr du übst, desto einfacher wird die deutsche Sprache.", en: "The more you practice, the easier the German language becomes." },
+            { de: "Meiner Meinung nach ist das eine sehr gute Entscheidung.", en: "In my opinion, that is a very good decision." },
+            { de: "Das neue Smartphone ist zwar teuer, aber es ist extrem schnell.", en: "The new smartphone is indeed expensive, but it is extremely fast." },
+            { de: "Ich bin fest davon überzeugt, dass Technologie uns hilft.", en: "I am firmly convinced that technology helps us." },
+            { de: "Dieses Kleid ist genauso schön wie das blaue Kleid dort.", en: "This dress is just as beautiful as the blue dress there." },
+            { de: "Im Vergleich zu gestern ist es heute deutlich wärmer.", en: "Compared to yesterday, it is significantly warmer today." },
+            { de: "Ich stimme dir vollkommen zu, das sehe ich genauso.", en: "I agree with you completely, I see it the exact same way." },
+            { de: "Es ist wichtig zu lernen, wie man Probleme selbst löst.", en: "It is important to learn how one solves problems by oneself." },
+            { de: "Obwohl es schwierig klingt, sollten wir es auf jeden Fall versuchen.", en: "Although it sounds difficult, we should definitely try it." }
+        ],
+        vocabList: [
+            { de: "besser", en: "better" },
+            { de: "üben", en: "to practice / exercise" },
+            { de: "desto", en: "the (used in comparisons like 'the more... the...')" },
+            { de: "die Meinung", en: "the opinion" },
+            { de: "überzeugt", en: "convinced" },
+            { de: "genauso", en: "just as / exactly the same" },
+            { de: "der Vergleich", en: "the comparison" },
+            { de: "zustimmen", en: "to agree" },
+            { de: "lösen", en: "to solve / loosen" },
+            { de: "versuchen", en: "to try / attempt" }
         ]
     }
 ];
 
-        // Bonus phrases unlocked one-by-one as milestone badges (levels 10, 20, ... 100) are earned.
-        const bonusVocabPool = [
-            { de: "Prost!", en: "Cheers!" },
-            { de: "Alles klar", en: "All good / understood" },
-            { de: "Kein Problem", en: "No problem" },
-            { de: "Viel Glück", en: "Good luck" },
-            { de: "Bis später", en: "See you later" },
-            { de: "Herzlichen Glückwunsch", en: "Congratulations" },
-            { de: "Guten Appetit", en: "Enjoy your meal" },
-            { de: "Schönen Tag noch", en: "Have a nice day" },
-            { de: "Gute Besserung", en: "Get well soon" },
-            { de: "Du schaffst das", en: "You've got this" }
-        ];
+// Bonus phrases pool for milestone badges
+const bonusVocabPool = [
+    { de: "Prost!", en: "Cheers!" },
+    { de: "Alles klar", en: "All good / understood" },
+    { de: "Kein Problem", en: "No problem" },
+    { de: "Viel Glück", en: "Good luck" },
+    { de: "Bis später", en: "See you later" },
+    { de: "Herzlichen Glückwunsch", en: "Congratulations" },
+    { de: "Guten Appetit", en: "Enjoy your meal" },
+    { de: "Schönen Tag noch", en: "Have a nice day" },
+    { de: "Gute Besserung", en: "Get well soon" },
+    { de: "Du schaffst das", en: "You've got this" }
+];
 
         // The signed-in learner for this session. Set once the username screen
         // is completed; every localStorage key and server call is scoped to it.
