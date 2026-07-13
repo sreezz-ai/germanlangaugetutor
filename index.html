@@ -207,16 +207,100 @@
 
     <!-- CORE LOGIC FRAMEWORK ENGINE -->
     <script>
-        const vocabPool = {
-            subjects: [{ de: "Ich", en: "I" }, { de: "Du", en: "You" }, { de: "Er", en: "He" }, { de: "Sie", en: "She" }, { de: "Wir", en: "We" }, { de: "Ihr", en: "You all" }],
-            verbs: [{ de: "trinke", en: "drink", inf: "trinken" }, { de: "esse", en: "eat", inf: "essen" }, { de: "lerne", en: "learn", inf: "lernen" }, { de: "sehe", en: "see", inf: "sehen" }, { de: "kaufe", en: "buy", inf: "kaufen" }, { de: "habe", en: "have", inf: "haben" }, { de: "suche", en: "search", inf: "suchen" }, { de: "mache", en: "make", inf: "machen" }],
-            objects: [{ de: "Wasser", en: "water" }, { de: "Brot", en: "bread" }, { de: "Deutsch", en: "German" }, { de: "Kaffee", en: "coffee" }, { de: "Milch", en: "milk" }, { de: "Obst", en: "fruit" }, { de: "Bücher", en: "books" }, { de: "Musik", en: "music" }, { de: "Tee", en: "tea" }],
-            adverbs: [{ de: "gern", en: "gladly" }, { de: "heute", en: "today" }, { de: "immer", en: "always" }, { de: "jetzt", en: "now" }, { de: "oft", en: "often" }, { de: "hier", en: "here" }],
-            adjectives: [{ de: "kalten", en: "cold" }, { de: "warmen", en: "warm" }, { de: "frischen", en: "fresh" }, { de: "süßen", en: "sweet" }, { de: "guten", en: "good" }, { de: "leckeren", en: "tasty" }],
-            rules: ["Rule: Basic Syntax setup. Word placement configurations order structures values: Subject (Position 1) + Conjugated Working Verb (Position 2).", "Rule: Adverb priority formatting. Expressions relating to frequency metrics scale directly adjacent following active verbs.", "Rule: Direct Accusative case layout rules. Objects taking primary transitive impact flow inside parameters directly."]
-        };
-
-        // Bonus phrases unlocked one-by-one as milestone badges (levels 10, 20, ... 100) are earned.
+        // PASTE THIS NEW BLOCK IN ITS PLACE:
+const courseModules = [
+    {
+        stageTitle: "1. Daily Routine & Survival Basics",
+        syntaxRule: "Rule: Position 2 inversion. If a time expression (e.g., 'Heute', 'Morgens') starts the sentence, the verb stays in Position 2, pushing the subject to Position 3.",
+        sentences: [
+            { de: "Ich trinke morgens Kaffee, aber ich trinke abends Tee.", en: "I drink coffee in the morning, but I drink tea in the evening." },
+            { de: "Heute lerne ich Deutsch, weil es Spaß macht.", en: "Today I am learning German because it is fun." },
+            { de: "Ich esse mein Brot und gehe schnell zur Arbeit.", en: "I eat my bread and go quickly to work." },
+            { de: "Es tut mir leid, aber ich verstehe das nicht.", en: "I am sorry, but I do not understand that." },
+            { de: "Ich suche den Bahnhof, denn ich muss nach Hause fahren.", en: "I am looking for the train station because I have to go home." }
+        ],
+        vocabList: [
+            { de: "morgens", en: "in the morning" },
+            { de: "abends", en: "in the evening" },
+            { de: "zur Arbeit", en: "to work" },
+            { de: "nach Hause", en: "towards home" },
+            { de: "der Bahnhof", en: "the train station" },
+            { de: "verstehe", en: "understand" }
+        ]
+    },
+    {
+        stageTitle: "2. Socializing, Intentions & Coordination",
+        syntaxRule: "Rule: Subordinating Connectors (weil, dass, wenn) kick the conjugated verb all the way to the very end of the clause.",
+        sentences: [
+            { de: "Ich weiß, dass du heute Abend Zeit hast.", en: "I know that you have time this evening." },
+            { de: "Wir können ins Kino gehen, wenn du Lust hast.", en: "We can go to the cinema if you feel like it." },
+            { de: "Ich komme später, weil mein Bus Verspätung hat.", en: "I am coming later because my bus is delayed." },
+            { de: "Trinkst du lieber Kaffee oder möchtest du ein Wasser?", en: "Do you prefer to drink coffee or would you like a water?" },
+            { de: "Sie kauft kein Obst, obwohl sie gesund leben will.", en: "She is buying no fruit, although she wants to live healthily." }
+        ],
+        vocabList: [
+            { de: "wissen", en: "to know (facts)" },
+            { de: "Lust haben", en: "to feel like doing something" },
+            { de: "die Verspätung", en: "the delay" },
+            { de: "lieber", en: "rather / prefer to" },
+            { de: "obwohl", en: "although" }
+        ]
+    },
+    {
+        stageTitle: "3. Dining Out, Shopping & Travel",
+        syntaxRule: "Rule: Modal verbs (können, möchten, müssen) take Position 2, while the second action verb is pushed to the end of the sentence in its infinitive form.",
+        sentences: [
+            { de: "Ich möchte einen Tisch reservieren, wenn es möglich ist.", en: "I would like to reserve a table if it is possible." },
+            { de: "Die Rechnung ist falsch, aber ich bezahle trotzdem mit Karte.", en: "The bill is wrong, but I am paying with card anyway." },
+            { de: "Können Sie mir helfen, da mein Koffer verloren ist?", en: "Can you help me, since my suitcase is lost?" },
+            { de: "Ich kaufe diese Jacke nicht, weil sie zu teuer ist.", en: "I am not buying this jacket because it is too expensive." },
+            { de: "Wo ist der Supermarkt, der bis Mitternacht geöffnet hat?", en: "Where is the supermarket that is open until midnight?" }
+        ],
+        vocabList: [
+            { de: "die Rechnung", en: "the bill / invoice" },
+            { de: "trotzdem", en: "anyway / nevertheless" },
+            { de: "verloren", en: "lost" },
+            { de: "teuer", en: "expensive" },
+            { de: "geöffnet", en: "open" }
+        ]
+    },
+    {
+        stageTitle: "4. Work, Appointments & Digital Life",
+        syntaxRule: "Rule: When dealing with compound past tenses or passive expressions, secondary helper verbs wrap around the target action word at the end of the clause.",
+        sentences: [
+            { de: "Ich schicke dir eine E-Mail, sobald das Projekt fertig ist.", en: "I will send you an email as soon as the project is finished." },
+            { de: "Wir müssen den Termin verschieben, weil ich krank bin.", en: "We have to postpone the appointment because I am sick." },
+            { de: "Mein Laptop funktioniert nicht, obwohl das Ladekabel angeschlossen ist.", en: "My laptop is not working, although the charging cable is plugged in." },
+            { de: "Ich bin im Büro, aber ich habe jetzt keine Zeit.", en: "I am in the office, but I have no time right now." },
+            { de: "Kannst du mir den Link senden, damit ich die Datei herunterlade?", en: "Can you send me the link so that I can download the file?" }
+        ],
+        vocabList: [
+            { de: "sobald", en: "as soon as" },
+            { de: "verschieben", en: "to postpone / shift" },
+            { de: "angeschlossen", en: "connected / plugged in" },
+            { de: "damit", en: "so that / order to" },
+            { de: "herunterlade", en: "download" }
+        ]
+    },
+    {
+        stageTitle: "5. Emergency, Health & Advanced Navigation",
+        syntaxRule: "Rule: Relative clauses. Words like 'der', 'die', or 'das' can act as connectors describing a noun, kicking the description's verb to the end.",
+        sentences: [
+            { de: "Ich brauche einen Arzt, weil ich starke Schmerzen habe.", en: "I need a doctor because I have severe pain." },
+            { de: "Rufen Sie einen Krankenwagen, da es einen Unfall gab!", en: "Call an ambulance, since there was an accident!" },
+            { de: "Wo ist die nächste Apotheke, die am Wochenende offen ist?", en: "Where is the nearest pharmacy that is open on the weekend?" },
+            { de: "Es ist gefährlich hier, deshalb müssen wir sofort gehen.", en: "It is dangerous here, deshalb müssen wir sofort gehen." },
+            { de: "Gibt es ein Krankenhaus in der Nähe, das Englisch spricht?", en: "Is there a hospital nearby that speaks English?" }
+        ],
+        vocabList: [
+            { de: "der Arzt", en: "the doctor" },
+            { de: "der Krankenwagen", en: "the ambulance" },
+            { de: "die Apotheke", en: "the pharmacy" },
+            { de: "deshalb", en: "therefore / that's why" },
+            { de: "gefährlich", en: "dangerous" }
+        ]
+    }
+];        // Bonus phrases unlocked one-by-one as milestone badges (levels 10, 20, ... 100) are earned.
         const bonusVocabPool = [
             { de: "Prost!", en: "Cheers!" },
             { de: "Alles klar", en: "All good / understood" },
@@ -589,98 +673,46 @@
             return adjustedVerb;
         }
 
-        function generateLevelContent(lvl) {
-            const subIndex = (lvl - 1) % vocabPool.subjects.length;
-            const verbObj = vocabPool.verbs[(lvl - 1) % vocabPool.verbs.length];
-            const objObj = vocabPool.objects[(lvl - 1) % vocabPool.objects.length];
-            const advObj = vocabPool.adverbs[(lvl - 1) % vocabPool.adverbs.length];
-            const ruleText = vocabPool.rules[(lvl - 1) % vocabPool.rules.length];
-            const subject = vocabPool.subjects[subIndex];
-            const adjustedVerb = conjugateVerb(subject, verbObj);
+        // PASTE THIS NEW FUNCTION IN ITS PLACE:
+function generateLevelContent(lvl) {
+    // Dynamically splits 100 levels across available modules (approx 20 levels per module)
+    const moduleIndex = Math.min(Math.floor((lvl - 1) / 20), courseModules.length - 1);
+    const activeModule = courseModules[moduleIndex];
+    
+    // Smoothly cycles through the sentences inside that active module
+    const sentenceIndex = (lvl - 1) % activeModule.sentences.length;
+    const targetSentenceObj = activeModule.sentences[sentenceIndex];
+    
+    const isMilestone = lvl % 10 === 0;
+    const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
 
-            let wordsArray = [];
-            let correctSentenceArray = [];
-            let englishTranslationStr = "";
-            const isMilestone = lvl % 10 === 0;
-            // Milestone difficulty curve: Tier 1 (10-40) = one linked clause,
-            // Tier 2 (50-90) = a second independent clause, Tier 3 (100) = a third causal clause.
-            const milestoneTier = isMilestone ? (lvl >= 100 ? 3 : (lvl >= 50 ? 2 : 1)) : 0;
+    // Split the exact phrase into clean searchable elements for Step 1
+    const rawWords = targetSentenceObj.de.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").split(/\s+/);
+    const simulatedVocabGrid = rawWords.map(word => {
+        // Find matching definition inside our vocabulary dictionary lists
+        const found = activeModule.vocabList.find(v => v.de.toLowerCase() === word.toLowerCase() || word.toLowerCase().includes(v.de.toLowerCase()));
+        return {
+            de: word,
+            en: found ? found.en : "Context Word"
+        };
+    });
 
-            if (isMilestone) {
-                const adjObj = vocabPool.adjectives[(lvl - 1) % vocabPool.adjectives.length];
-                const secondObjObj = vocabPool.objects[lvl % vocabPool.objects.length];
-
-                correctSentenceArray = [subject.de, adjustedVerb, advObj.de, adjObj.de, objObj.de];
-                wordsArray = [
-                    { de: subject.de, en: subject.en },
-                    { de: adjustedVerb, en: `${verbObj.en}` },
-                    { de: advObj.de, en: advObj.en },
-                    { de: adjObj.de, en: adjObj.en },
-                    { de: objObj.de, en: objObj.en }
-                ];
-                let englishParts = [`${subject.en} ${advObj.en} ${verbObj.en}s ${adjObj.en} ${objObj.en}`];
-
-                if (milestoneTier >= 2) {
-                    // Tier 2+: link a second independent clause with a different subject/verb.
-                    const subject2 = vocabPool.subjects[lvl % vocabPool.subjects.length];
-                    const verbObj2 = vocabPool.verbs[(lvl + 2) % vocabPool.verbs.length];
-                    const adjustedVerb2 = conjugateVerb(subject2, verbObj2);
-
-                    correctSentenceArray = correctSentenceArray.concat(["und", subject2.de, adjustedVerb2, secondObjObj.de]);
-                    wordsArray = wordsArray.concat([
-                        { de: subject2.de, en: subject2.en },
-                        { de: adjustedVerb2, en: verbObj2.en },
-                        { de: secondObjObj.de, en: secondObjObj.en }
-                    ]);
-                    englishParts.push(`and ${subject2.en} ${verbObj2.en}s ${secondObjObj.en}`);
-                } else {
-                    correctSentenceArray = correctSentenceArray.concat(["und", secondObjObj.de]);
-                    wordsArray.push({ de: secondObjObj.de, en: secondObjObj.en });
-                    englishParts.push(`and ${secondObjObj.en}`);
-                }
-
-                if (milestoneTier >= 3) {
-                    // Tier 3 (level 100 only): append a third causal clause for maximum length.
-                    const subject3 = vocabPool.subjects[(lvl + 3) % vocabPool.subjects.length];
-                    const verbObj3 = vocabPool.verbs[(lvl + 4) % vocabPool.verbs.length];
-                    const adjustedVerb3 = conjugateVerb(subject3, verbObj3);
-                    const thirdObjObj = vocabPool.objects[(lvl + 5) % vocabPool.objects.length];
-
-                    correctSentenceArray = correctSentenceArray.concat(["denn", subject3.de, adjustedVerb3, thirdObjObj.de]);
-                    wordsArray = wordsArray.concat([
-                        { de: subject3.de, en: subject3.en },
-                        { de: adjustedVerb3, en: verbObj3.en },
-                        { de: thirdObjObj.de, en: thirdObjObj.en }
-                    ]);
-                    englishParts.push(`because ${subject3.en} ${verbObj3.en}s ${thirdObjObj.en}`);
-                }
-
-                englishTranslationStr = englishParts.join(" ") + ".";
-            } else if (lvl % 2 === 1) {
-                correctSentenceArray = [subject.de, adjustedVerb, objObj.de];
-                wordsArray = [{ de: subject.de, en: subject.en }, { de: adjustedVerb, en: `${verbObj.en}` }, { de: objObj.de, en: objObj.en }];
-                englishTranslationStr = `${subject.en} ${verbObj.en}s ${objObj.en}.`;
-            } else {
-                correctSentenceArray = [subject.de, adjustedVerb, advObj.de, objObj.de];
-                wordsArray = [{ de: subject.de, en: subject.en }, { de: adjustedVerb, en: `${verbObj.en}` }, { de: advObj.de, en: advObj.en }, { de: objObj.de, en: objObj.en }];
-                englishTranslationStr = `${subject.en} ${advObj.en} ${verbObj.en}s ${objObj.en}.`;
-            }
-
-            return {
-                title: isMilestone
-                    ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — Complex Structures with "${objObj.de}"`
-                    : `Level ${lvl}: Application of Context Phrases using "${objObj.de}"`,
-                desc: isMilestone
-                    ? `A special milestone challenge (Tier ${milestoneTier}): combine multiple linked clauses into one extended sentence.`
-                    : `Translate target thoughts by linking structural active parameters elements accurately.`,
-                rule: ruleText,
-                vocab: wordsArray,
-                isMilestone: isMilestone,
-                milestoneTier: milestoneTier,
-                sentence: { correctArray: correctSentenceArray, en: englishTranslationStr, de: correctSentenceArray.join(" ") + "." }
-            };
+    return {
+        title: isMilestone
+            ? `Level ${lvl}: Boss Milestone Tier ${milestoneTier} — ${activeModule.stageTitle}`
+            : `Level ${lvl}: ${activeModule.stageTitle}`,
+        desc: `Mastering daily communication structures.`,
+        rule: activeModule.syntaxRule,
+        vocab: simulatedVocabGrid,
+        isMilestone: isMilestone,
+        milestoneTier: milestoneTier,
+        sentence: {
+            correctArray: targetSentenceObj.de.split(/\s+/),
+            en: targetSentenceObj.en,
+            de: targetSentenceObj.de
         }
-
+    };
+}
         function loadActiveLevel(lvl) {
             currentLevel = lvl;
             generatedLevelData = generateLevelContent(lvl);
